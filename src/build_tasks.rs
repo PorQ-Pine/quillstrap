@@ -47,6 +47,7 @@ pub fn rootfs(build_dir: &str, private_key_path: &str, unrestricted_system: bool
     // Set up the chroot
     rootfs_setup_chroot(&rootfs_build_dir_path, &base_rootfs_path, &merged_rootfs_path, unrestricted_system)?;
     // Install packages/updating the chroot
+    rootfs_misc(&merged_rootfs_path)?;
     rootfs_manage_packages(&merged_rootfs_path, unrestricted_system)?;
     rootfs_tear_down_chroot(&merged_rootfs_path)?;
     // Compress the rootfs
@@ -110,12 +111,26 @@ pub fn rootfs_run_chroot_command(merged_rootfs_path: &str, command: &[&str]) -> 
 
 pub fn rootfs_manage_packages(merged_rootfs_path: &str, unrestricted_system: bool) -> Result<()> {
     rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "update"])?;
-    rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "zsh"])?;
+    rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "zsh", "NetworkManager", "NetworkManager-wifi"])?;
+    rootfs_enable_service(&merged_rootfs_path, "NetworkManager")?;
     if unrestricted_system {
-        rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "openssh-server"])?;
-        rootfs_run_chroot_command(&merged_rootfs_path, &["systemctl", "enable", "sshd"])?;
+        rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "dropbear"])?;
+        rootfs_enable_service(&merged_rootfs_path, "dropbear")?;
     }
     rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "clean", "all"])?;
+
+    Ok(())
+}
+
+pub fn rootfs_misc(merged_rootfs_path: &str) -> Result<()> {
+    fs::create_dir_all(&format!("{}/lib/modules", &merged_rootfs_path))?;
+    fs::create_dir_all(&format!("{}/lib/firmware", &merged_rootfs_path))?;
+
+    Ok(())
+}
+
+pub fn rootfs_enable_service(merged_rootfs_path: &str, service: &str) -> Result<()> {
+    rootfs_run_chroot_command(&merged_rootfs_path, &["systemctl", "enable", &service])?;
 
     Ok(())
 }

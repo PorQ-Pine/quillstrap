@@ -60,7 +60,7 @@ pub fn mount_tmpfs_on_build_dir(build_dir: &str) -> Result<()> {
 
 pub fn bind_mount(source: &str, mountpoint: &str) -> Result<()> {
     // Please figure out why Mount::builder() does not work for this kind of mount
-    run_command("mount", &["--bind", &source, &mountpoint])?;
+    run_command("mount", &["--rbind", &source, &mountpoint])?;
 
     Ok(())
 }
