@@ -125,9 +125,9 @@ pub fn rootfs_misc(merged_rootfs_path: &str) -> Result<()> {
     fs::create_dir_all(&format!("{}/lib/firmware", &merged_rootfs_path))?;
     clean_dir(&format!("{}/var/log", &merged_rootfs_path))?;
     clean_dir(&format!("{}/var/cache", &merged_rootfs_path))?;
-    rootfs_disable_service(&merged_rootfs_path, "serial-getty@.service")?;
     rootfs_disable_service(&merged_rootfs_path, "systemd-networkd-wait-online")?;
     rootfs_disable_service(&merged_rootfs_path, "systemd-time-wait-sync")?;
+    rootfs_disable_service(&merged_rootfs_path, "serial-getty@")?;
     rootfs_run_chroot_command(&merged_rootfs_path, &["chown", "-R", "quill", "/home/quill"])?;
     rootfs_run_chroot_command(&merged_rootfs_path, &["sed", "-i", "s/Fedora Linux 42 (Container Image)/Quill OS/g", "/etc/os-release"])?;
 
