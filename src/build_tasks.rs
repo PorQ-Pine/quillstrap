@@ -8,7 +8,7 @@ use git2::Repository;
 use crate::common;
 use crate::signing;
 
-use common::{run_command, download_file, bind_mount};
+use common::{run_command, download_file, bind_mount, clean_dir};
 
 /* BEGIN U-BOOT */
 pub fn u_boot(build_dir: &str) -> Result<()> {
@@ -46,9 +46,9 @@ pub fn rootfs(build_dir: &str, private_key_path: &str, unrestricted_system: bool
     run_command("tar", &["-C", &base_rootfs_path, "-xvf", &base_rootfs_archive_path])?;
     // Set up the chroot
     rootfs_setup_chroot(&rootfs_build_dir_path, &base_rootfs_path, &merged_rootfs_path, unrestricted_system)?;
-    // Install packages/updating the chroot
-    rootfs_misc(&merged_rootfs_path)?;
+    // Install packages/update the chroot
     rootfs_manage_packages(&merged_rootfs_path, unrestricted_system)?;
+    rootfs_misc(&merged_rootfs_path)?;
     rootfs_tear_down_chroot(&merged_rootfs_path)?;
     // Compress the rootfs
     rootfs_compress_and_sign(&rootfs_build_dir_path, &merged_rootfs_path, &private_key_path)?;
@@ -66,13 +66,13 @@ pub fn rootfs_setup_chroot(rootfs_build_dir_path: &str, base_rootfs_path: &str, 
 
     // Clone rootfs overlay repository for seamless packaging of static/custom files into final root filesystem
     info!("Cloning rootfs-overlay repository");
-    Repository::clone(&common::ROOTFS_OVERLAY_REPO_URL, &rootfs_overlay_repository_path)?;
+    Repository::clone_recurse(&common::ROOTFS_OVERLAY_REPO_URL, &rootfs_overlay_repository_path)?;
     let common_rootfs_overlay_path = format!("{}/common", &rootfs_overlay_repository_path);
     let specific_rootfs_overlay_path = match unrestricted_system {
         true => format!("{}/unrestricted", &rootfs_overlay_repository_path),
         false => format!("{}/restricted", &rootfs_overlay_repository_path),
     };
-    // Merge the two fileystems
+    // Merge the fileystems
     run_command("fuse-overlayfs", &["-o", &format!("allow_other,lowerdir={}:{}:{},upperdir={},workdir={}", &common_rootfs_overlay_path, &specific_rootfs_overlay_path, &base_rootfs_path, &rootfs_cow_dir_path, &rootfs_work_dir_path), &merged_rootfs_path])?;
 
     info!("Mounting chroot filesystems");
@@ -111,11 +111,9 @@ pub fn rootfs_run_chroot_command(merged_rootfs_path: &str, command: &[&str]) -> 
 
 pub fn rootfs_manage_packages(merged_rootfs_path: &str, unrestricted_system: bool) -> Result<()> {
     rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "update"])?;
-    rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "zsh", "NetworkManager", "NetworkManager-wifi"])?;
-    rootfs_enable_service(&merged_rootfs_path, "NetworkManager")?;
+    rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "zsh", "NetworkManager", "NetworkManager-wifi", "vim", "nano", "busybox"])?;
     if unrestricted_system {
         rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "--assumeyes", "install", "dropbear"])?;
-        rootfs_enable_service(&merged_rootfs_path, "dropbear")?;
     }
     rootfs_run_chroot_command(&merged_rootfs_path, &["dnf", "clean", "all"])?;
 
@@ -125,12 +123,20 @@ pub fn rootfs_manage_packages(merged_rootfs_path: &str, unrestricted_system: boo
 pub fn rootfs_misc(merged_rootfs_path: &str) -> Result<()> {
     fs::create_dir_all(&format!("{}/lib/modules", &merged_rootfs_path))?;
     fs::create_dir_all(&format!("{}/lib/firmware", &merged_rootfs_path))?;
+    clean_dir(&format!("{}/var/log", &merged_rootfs_path))?;
+    clean_dir(&format!("{}/var/cache", &merged_rootfs_path))?;
+    rootfs_disable_service(&merged_rootfs_path, "serial-getty@.service")?;
+    rootfs_disable_service(&merged_rootfs_path, "systemd-networkd-wait-online")?;
+    rootfs_disable_service(&merged_rootfs_path, "systemd-time-wait-sync")?;
+    rootfs_run_chroot_command(&merged_rootfs_path, &["chown", "-R", "quill", "/home/quill"])?;
+    rootfs_run_chroot_command(&merged_rootfs_path, &["sed", "-i", "s/Fedora Linux 42 (Container Image)/Quill OS/g", "/etc/os-release"])?;
 
     Ok(())
 }
 
-pub fn rootfs_enable_service(merged_rootfs_path: &str, service: &str) -> Result<()> {
-    rootfs_run_chroot_command(&merged_rootfs_path, &["systemctl", "enable", &service])?;
+pub fn rootfs_disable_service(merged_rootfs_path: &str, service: &str) -> Result<()> {
+    rootfs_run_chroot_command(&merged_rootfs_path, &["systemctl", "disable", &service])?;
+    rootfs_run_chroot_command(&merged_rootfs_path, &["systemctl", "mask", &service])?;
 
     Ok(())
 }

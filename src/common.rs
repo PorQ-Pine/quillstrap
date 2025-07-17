@@ -1,4 +1,4 @@
-use std::{fs::File, io::copy};
+use std::{fs::{self, File}, io::copy};
 use anyhow::{Result, Context};
 use log::{info, warn, error};
 use std::process::Command;
@@ -61,6 +61,13 @@ pub fn mount_tmpfs_on_build_dir(build_dir: &str) -> Result<()> {
 pub fn bind_mount(source: &str, mountpoint: &str) -> Result<()> {
     // Please figure out why Mount::builder() does not work for this kind of mount
     run_command("mount", &["--rbind", &source, &mountpoint])?;
+
+    Ok(())
+}
+
+pub fn clean_dir(path: &str) -> Result<()> {
+    fs::remove_dir_all(&path)?;
+    fs::create_dir_all(&path)?;
 
     Ok(())
 }
