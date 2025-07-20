@@ -1,12 +1,16 @@
-use std::{fs::{self, File}, io::copy};
-use anyhow::{Result, Context};
-use log::{info, warn, error};
+use anyhow::{Context, Result};
+use log::info;
 use std::process::Command;
-use sys_mount::{unmount, Mount, UnmountFlags};
+use std::{
+    fs::{self, File},
+    io::copy,
+};
+use sys_mount::{Mount, UnmountFlags, unmount};
 
 pub const ROOTFS_BUILD_DIR: &str = "rootfs/";
 pub const ROOTFS_BASE_DIR: &str = "base/";
-pub const BASE_ROOTFS_URL: &str = "https://images.linuxcontainers.org/images/fedora/42/arm64/default/";
+pub const BASE_ROOTFS_URL: &str =
+    "https://images.linuxcontainers.org/images/fedora/42/arm64/default/";
 pub const BASE_ROOTFS_FILE: &str = "base_rootfs.tar.xz";
 pub const DOWNLOADS_DIR: &str = "download/";
 pub const ROOTFS_FILE: &str = "rootfs.squashfs";
@@ -17,7 +21,11 @@ pub const ROOTFS_COW_DIR: &str = "write/";
 pub const ROOTFS_WORK_DIR: &str = "work/";
 
 pub fn run_command(command: &str, args: &[&str]) -> Result<()> {
-    info!("Running command '{}' with arguments '{}'", &command, &args.join(" "));
+    info!(
+        "Running command '{}' with arguments '{}'",
+        &command,
+        &args.join(" ")
+    );
     let status = Command::new(&command)
         .args(args)
         .status()
@@ -26,7 +34,11 @@ pub fn run_command(command: &str, args: &[&str]) -> Result<()> {
     if status.success() {
         Ok(())
     } else {
-        return Err(anyhow::anyhow!("Command `{}` exited with status: {}", &command, &status))
+        return Err(anyhow::anyhow!(
+            "Command `{}` exited with status: {}",
+            &command,
+            &status
+        ));
     }
 }
 
@@ -53,7 +65,10 @@ pub fn mount_tmpfs_on_build_dir(build_dir: &str) -> Result<()> {
     }
     // Mount new tmpfs on build directory
     info!("Mounting tmpfs on build directory");
-    Mount::builder().fstype("tmpfs").data("size=50%").mount("tmpfs", &build_dir)?;
+    Mount::builder()
+        .fstype("tmpfs")
+        .data("size=50%")
+        .mount("tmpfs", &build_dir)?;
 
     Ok(())
 }
