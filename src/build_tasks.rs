@@ -225,6 +225,7 @@ pub fn rootfs_misc(merged_rootfs_path: &str, unrestricted_system: bool) -> Resul
     rootfs_disable_service(&merged_rootfs_path, "systemd-networkd-wait-online")?;
     rootfs_disable_service(&merged_rootfs_path, "systemd-time-wait-sync")?;
     rootfs_disable_service(&merged_rootfs_path, "serial-getty@")?;
+    rootfs_disable_service(&merged_rootfs_path, "getty@tty1")?;
     rootfs_run_chroot_command(
         &merged_rootfs_path,
         &["chown", "-R", "quill", "/home/quill"],
