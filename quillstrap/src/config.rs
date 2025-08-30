@@ -24,6 +24,12 @@ pub enum GitPlatform {
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Clone)]
+pub struct QinitOptions {
+    pub deploy_ssh_ip_addr: String,
+    pub deploy_ssh_port: String,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Clone)]
 pub struct Config {
     pub git_link_type: GitLinkType,
     pub git_platform: GitPlatform,
@@ -32,10 +38,11 @@ pub struct Config {
     pub command_output: bool,
     pub main_private_key_path: String, // Relative to root of the quillstrap repo!
     pub unrestricted: bool,
-    // Also applied when unrestricred is true
+    // Also applied when unrestricted is true
     pub root_password: String,
     // Rootfs ssh login. Needs unrestricted to true too
     pub unsecure_debug: bool,
+    pub qinit_options: QinitOptions,
 }
 
 impl Default for Config {
@@ -49,6 +56,7 @@ impl Default for Config {
             unrestricted: true, // :)
             root_password: "root".to_string(),
             unsecure_debug: false, // :(
+            qinit_options: QinitOptions { deploy_ssh_ip_addr: "192.168.3.2".to_string(), deploy_ssh_port: "2222".to_string() }
         }
     }
 }
