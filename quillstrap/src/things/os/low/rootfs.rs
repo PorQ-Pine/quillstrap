@@ -250,6 +250,7 @@ impl SetupThing for Rootfs {
                 &format!(" {}etc/dropbear/dropbear_rsa_host_key.pub", RD),
             );
             Rootfs::disable_service(RD, "sshd");
+            Rootfs::disable_service(RD, "sshd.socket");
         }
 
         // Root password (for now at least)
@@ -360,3 +361,11 @@ impl SetupThing for Rootfs {
         todo!()
     }
 }
+
+/*
+Command snippets for early rootfs
+
+connect to wifi:
+nmcli device wifi list
+nmcli device wifi connect "hotspot" password "12345678"
+*/
