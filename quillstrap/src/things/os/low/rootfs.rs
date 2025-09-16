@@ -26,6 +26,8 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "fontconfig",
     "freetype",
     "mesa-libgbm",
+    "pam",
+    "pam-libs",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[

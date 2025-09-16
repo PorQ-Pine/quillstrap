@@ -11,6 +11,7 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "llvm",
     "clang",
     "ldd",
+    "pam-devel",
 ];
 
 #[derive(Clone, Copy, Default)]

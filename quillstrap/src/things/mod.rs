@@ -29,6 +29,7 @@ pub enum TraitWrapper {
     TwRootfsSysroot(RootfsSysroot),
     TwQoms(Qoms),
     TwSlintGallery(SlintGallery),
+    TwGreetd(Greetd),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -56,6 +57,7 @@ macro_rules! forward {
             TraitWrapper::TwRootfsSysroot(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwQoms(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwSlintGallery(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwGreetd(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -122,6 +124,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwRootfsSysroot(Default::default()),
         TwQoms(Default::default()),
         TwSlintGallery(Default::default()),
+        TwGreetd(Default::default()),
     ]
 }
 
