@@ -116,7 +116,7 @@ impl SetupThing for Rootfs {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["rootfs_configs"]
+        vec!["rootfs_configs", "greetd"]
     }
 
     fn git(&self) -> &'static str {
@@ -182,6 +182,8 @@ impl SetupThing for Rootfs {
         } else {
             copy_dir_content("../rootfs_configs/restricted", RD);
         }
+        // Copy skel dir to root
+        copy_dir_content("../rootfs_configs/common/etc/skel", &format!("{}root/", RD));
 
         // Apply dnf blacklist
         append_to_file(
@@ -351,6 +353,16 @@ impl SetupThing for Rootfs {
                 "usermod -aG render greetd",
                 _options.config.command_output,
             );
+
+            // Copy modified binary
+            copy_file("../greetd/out/greetd", &format!("{}usr/bin/greetd", RD)).unwrap();
+
+            // Modify config
+            let greetd_config = &format!("{}etc/greetd/config.toml", RD);
+            let file = read_file_str(greetd_config.to_string()).unwrap();
+            if file.contains("agreety --cmd /bin/sh") {
+                replace_string_file(greetd_config, "agreety --cmd /bin/sh", "sleep infinity");
+            }
         }
 
         // Cleanout
@@ -394,6 +406,14 @@ impl SetupThing for Rootfs {
             "/mnt/quill_main/system/rootfs.squashfs.dgst",
         )
         .unwrap();
+
+        if Confirm::with_theme(&ColorfulTheme::default())
+            .with_prompt("Do you want to also clean out RW rootfs?")
+            .interact()
+            .unwrap()
+        {
+            remove_dir_all("/mnt/quill_main/system/rootfs").ok();
+        }
 
         if !path_exists("/mnt/quill_main/system/rootfs.squashfs")
             || !path_exists("/mnt/quill_main/system/rootfs.squashfs.dgst")
