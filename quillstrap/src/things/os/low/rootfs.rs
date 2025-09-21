@@ -67,7 +67,14 @@ const ROOTFS_BLACKLIST: &[&str] = &[
     "selinux*",
 ];
 
-const ROOTFS_GUI_PACKAGES: &[&str] = &["greetd", "niri", "upower", "alacritty"];
+const ROOTFS_GUI_PACKAGES: &[&str] = &[
+    "greetd",
+    "niri",
+    "upower",
+    "alacritty",
+    "bluez",
+    "bluez-tools",
+];
 
 #[derive(Clone, Copy, Default)]
 pub struct Rootfs;
@@ -116,7 +123,7 @@ impl SetupThing for Rootfs {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["rootfs_configs", "greetd"]
+        vec!["rootfs_configs", "greetd", "eww_config"]
     }
 
     fn git(&self) -> &'static str {
@@ -174,6 +181,15 @@ impl SetupThing for Rootfs {
 
         const RD: &str = "rootfs/";
         Rootfs::turn_on_chroot(RD);
+
+        // Eww config coppied to rootfs_configs
+        remove_dir_all("../rootfs_configs/common/etc/skel/.config/eww").ok();
+        mkdir_p("../rootfs_configs/common/etc/skel/.config/eww");
+        copy_dir_content(
+            "../../gui/eww_config/",
+            "../rootfs_configs/common/etc/skel/.config/eww",
+        );
+        remove_dir_all("../rootfs_configs/common/etc/skel/.config/eww/.git").ok();
 
         // Configs from other repo
         copy_dir_content("../rootfs_configs/common", RD);
@@ -322,7 +338,8 @@ impl SetupThing for Rootfs {
 
         // GUI packages modifications
         {
-            // For tty to not appear with greetd, while running niri
+            // Greetd
+            // For tty to not appear with greetd, while running niri - probably not needed anymore
             for i in 1..8 {
                 Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
             }
@@ -363,7 +380,33 @@ impl SetupThing for Rootfs {
             if file.contains("agreety --cmd /bin/sh") {
                 replace_string_file(greetd_config, "agreety --cmd /bin/sh", "sleep infinity");
             }
+
+            // TODO: add greetd to excludes now
+
+            // Eww
+            Rootfs::execute(
+                RD,
+                "dnf copr enable varlad/eww -y",
+                _options.config.command_output,
+            );
+
+            Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
         }
+
+        // Networking
+        Rootfs::execute(
+            RD,
+            "systemctl enable bluetooth",
+            _options.config.command_output,
+        );
+
+        // Turn off power saving for wireless, it sucks
+        std::fs::write(
+    format!("{}etc/udev/rules.d/70-wifi-powersave.rules", RD),
+    r#"ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan0", RUN+="/usr/sbin/iw dev wlan0 set power_save off""#).unwrap();
+        std::fs::write(
+    format!("{}etc/udev/rules.d/71-bluetooth-powersave.rules", RD),
+    r#"ACTION=="add|change", KERNEL=="hci*", SUBSYSTEM=="bluetooth", ATTR{device/power/control}="on""#).unwrap();
 
         // Cleanout
         umount_recursive(RD);
@@ -441,4 +484,15 @@ Command snippets for early rootfs
 connect to wifi:
 nmcli device wifi list
 nmcli device wifi connect "hotspot" password "12345678"
+
+Bluetooth keyboard copy line by line:
+bluetoothctl
+power on
+agent on
+default-agent
+scan on
+pair <MAC_ADDRESS>
+connect <MAC_ADDRESS>
+trust <MAC_ADDRESS>
+exit
 */

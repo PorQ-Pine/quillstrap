@@ -30,6 +30,7 @@ pub enum TraitWrapper {
     TwQoms(Qoms),
     TwSlintGallery(SlintGallery),
     TwGreetd(Greetd),
+    TwEwwConfig(EwwConfig),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -58,6 +59,7 @@ macro_rules! forward {
             TraitWrapper::TwQoms(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwSlintGallery(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwGreetd(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwEwwConfig(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -125,6 +127,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwQoms(Default::default()),
         TwSlintGallery(Default::default()),
         TwGreetd(Default::default()),
+        TwEwwConfig(Default::default()),
     ]
 }
 
