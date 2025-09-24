@@ -391,6 +391,10 @@ impl SetupThing for Rootfs {
             );
 
             Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
+
+            // Initial rotation, idk if it's the best way
+            // Set in rootfs_config, here we only apply, idk if its needed anyway
+            Rootfs::execute(RD, "systemd-hwdb update", _options.config.command_output);
         }
 
         // Networking
@@ -405,6 +409,7 @@ impl SetupThing for Rootfs {
     format!("{}etc/udev/rules.d/70-wifi-powersave.rules", RD),
     r#"ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan0", RUN+="/usr/sbin/iw dev wlan0 set power_save off""#).unwrap();
         std::fs::write(
+        // Idk if it's needed for bt after all
     format!("{}etc/udev/rules.d/71-bluetooth-powersave.rules", RD),
     r#"ACTION=="add|change", KERNEL=="hci*", SUBSYSTEM=="bluetooth", ATTR{device/power/control}="on""#).unwrap();
 
