@@ -51,7 +51,7 @@ impl SetupThing for BootPartition {
         copy_file("../kernel/out/DTB", "/mnt/quill_boot/DTB").unwrap();
 
         copy_file(
-            "../firmware/wifi_bt/firmware.squashfs",
+            "../firmware/out/wifi_bt/firmware.squashfs",
             "/mnt/quill_boot/firmware.squashfs",
         )
         .unwrap();

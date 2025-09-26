@@ -3,6 +3,7 @@ use clap::Parser;
 
 const GENERAL_OPTIONS: &str = "Run options";
 const QUILL_INIT_OPTIONS: &str = "Quill Init options";
+const FIRMWARE_OPTIONS: &str = "Firmware options";
 
 #[derive(Parser, Clone, Debug)]
 #[command(about = "Quill OS build and bootstrap tool")]
@@ -50,12 +51,21 @@ pub struct Args {
 
     #[command(flatten)]
     pub quill_init_options: QuillInitOptions,
+
+    #[command(flatten)]
+    pub firmware_options: FirmwareOptions,
 }
 
 #[derive(Parser, Clone, Debug)]
 pub struct QuillInitOptions {
     #[arg(long, help = "For quill_init ssh build", help_heading = QUILL_INIT_OPTIONS)]
     pub qi_ssh_build: bool,
+}
+
+#[derive(Parser, Clone, Debug)]
+pub struct FirmwareOptions {
+    #[arg(long, help = "Fix for disconnecting bluetooth devices", help_heading = FIRMWARE_OPTIONS)]
+    pub remove_bt_firmware: bool,
 }
 
 impl Args {
