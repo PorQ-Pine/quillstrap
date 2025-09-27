@@ -1,10 +1,11 @@
 use crate::{
-    prelude::*, things::{os::low::rootfs_configs::RootfsConfigs},
+    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs},
 };
 
 pub mod init;
 pub mod low;
 pub mod os;
+pub mod common;
 
 #[derive(Clone, Copy)]
 pub enum TraitWrapper {
@@ -31,6 +32,7 @@ pub enum TraitWrapper {
     TwSlintGallery(SlintGallery),
     TwGreetd(Greetd),
     TwEwwConfig(EwwConfig),
+    TwLibQuillCom(LibQuillCom),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -60,6 +62,7 @@ macro_rules! forward {
             TraitWrapper::TwSlintGallery(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwGreetd(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwEwwConfig(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwLibQuillCom(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -128,6 +131,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwSlintGallery(Default::default()),
         TwGreetd(Default::default()),
         TwEwwConfig(Default::default()),
+        TwLibQuillCom(Default::default()),
     ]
 }
 

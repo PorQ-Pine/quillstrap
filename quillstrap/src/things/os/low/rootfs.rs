@@ -123,6 +123,7 @@ impl Rootfs {
     }
 }
 
+const RD: &str = "rootfs/";
 impl SetupThing for Rootfs {
     fn name(&self) -> &'static str {
         "rootfs"
@@ -178,7 +179,11 @@ impl SetupThing for Rootfs {
     }
 
     fn clean(&self) -> color_eyre::eyre::Result<(), String> {
-        remove_dir_all("rootfs/").ok();
+        umount_recursive(RD);
+        if let Err(err) = remove_dir_all("rootfs/") {
+            warn!("Failed to remove rootfs: {:?}", err);
+        }
+        remove_dir_all("out/").ok();
         remove_file("rootfs.tar.xz", true).ok();
 
         Ok(())
@@ -189,7 +194,6 @@ impl SetupThing for Rootfs {
             "This is an additive build, if you builded it before with different features, you should clean it now!"
         );
 
-        const RD: &str = "rootfs/";
         Rootfs::turn_on_chroot(RD);
 
         // Eww config coppied to rootfs_configs
@@ -407,11 +411,23 @@ impl SetupThing for Rootfs {
             Rootfs::execute(RD, "systemd-hwdb update", _options.config.command_output);
 
             // Nerd fonts for eww
-            Rootfs::execute(RD, "dnf copr enable che/nerd-fonts -y", _options.config.command_output);
-            Rootfs::execute(RD, "dnf install nerd-fonts -y", _options.config.command_output);
+            Rootfs::execute(
+                RD,
+                "dnf copr enable che/nerd-fonts -y",
+                _options.config.command_output,
+            );
+            Rootfs::execute(
+                RD,
+                "dnf install nerd-fonts -y",
+                _options.config.command_output,
+            );
 
             // Rnote - welp, doesn't launch
-            Rootfs::execute(RD, "dnf copr enable fotnite-vevo/rnote fedora-41-aarch64 -y", _options.config.command_output);
+            Rootfs::execute(
+                RD,
+                "dnf copr enable fotnite-vevo/rnote fedora-41-aarch64 -y",
+                _options.config.command_output,
+            );
             Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
         }
 

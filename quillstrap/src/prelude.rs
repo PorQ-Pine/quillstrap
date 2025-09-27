@@ -41,4 +41,5 @@ pub use crate::os::low::greetd::*;
 pub use std::io::Write;
 pub use crate::os::gui::slint_gallery::*;
 pub use crate::os::gui::eww_config::*;
+pub use crate::things::common::libquillcom::*;
 pub use std::fs::remove_dir_all;
