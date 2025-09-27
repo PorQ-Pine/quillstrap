@@ -76,9 +76,14 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "tilix", // I can't configure it's default terminal font from here... Anyway the gui allows to change it easily
     "bluez",
     "bluez-tools",
-    "blueman",
+    // Breaks bluetoothctl?
+    // "blueman",
     "dejavu-fonts-all",
     "nwg-drawer",
+    "xournalpp",
+    "firefox",
+    // Remove once login from qinit works
+    "tuigreet",
 ];
 
 #[derive(Clone, Copy, Default)]
@@ -400,6 +405,14 @@ impl SetupThing for Rootfs {
             // Initial rotation, idk if it's the best way
             // Set in rootfs_config, here we only apply, idk if its needed anyway
             Rootfs::execute(RD, "systemd-hwdb update", _options.config.command_output);
+
+            // Nerd fonts for eww
+            Rootfs::execute(RD, "dnf copr enable che/nerd-fonts -y", _options.config.command_output);
+            Rootfs::execute(RD, "dnf install nerd-fonts -y", _options.config.command_output);
+
+            // Rnote - welp, doesn't launch
+            Rootfs::execute(RD, "dnf copr enable fotnite-vevo/rnote fedora-41-aarch64 -y", _options.config.command_output);
+            Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
         }
 
         // Networking
