@@ -71,9 +71,14 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "greetd",
     "niri",
     "upower",
+    // 2 default terminals
     "alacritty",
+    "tilix", // I can't configure it's default terminal font from here... Anyway the gui allows to change it easily
     "bluez",
     "bluez-tools",
+    "blueman",
+    "dejavu-fonts-all",
+    "nwg-drawer",
 ];
 
 #[derive(Clone, Copy, Default)]
