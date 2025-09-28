@@ -76,6 +76,9 @@ impl SetupThing for Qoms {
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("killall -9 qoms", port, _options);
+        ssh_execute("/opt/qoms/qoms", port, _options);
         Ok(())
     }
 }
