@@ -28,7 +28,7 @@ impl SetupThing for SerialLaunch {
         Ok(())
     }
 
-    fn clean(&self) -> std::result::Result<(), String> {
+    fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         Ok(())
     }
 
@@ -40,9 +40,9 @@ impl SetupThing for SerialLaunch {
         Ok(())
     }
 
-    fn run(&self) -> std::result::Result<(), String> {
+    fn run(&self, _options: &Options) -> std::result::Result<(), String> {
         let port = choose_serial_port();
-        run_shell_command(&format!("tio -b 1500000 {}", port), true).unwrap();
+        run_shell_command(&format!("tio -b 1500000 {}", port), _options.config.command_output).unwrap();
         Ok(())
     }
 }

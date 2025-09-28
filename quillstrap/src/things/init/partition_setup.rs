@@ -25,7 +25,7 @@ impl SetupThing for PartitionSetup {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 
@@ -37,7 +37,7 @@ impl SetupThing for PartitionSetup {
         todo!();
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         show_wait_toast(
             "This process can brick your pinenote, destroy your data and kill a crab, make sure you took a backup. Do you wish to continue?",
         );
@@ -47,7 +47,7 @@ impl SetupThing for PartitionSetup {
         let disk = choose_disk();
 
         info!("Look:");
-        run_command(&format!("gdisk -l {}", disk), true).unwrap();
+        run_command(&format!("gdisk -l {}", disk), _options.config.command_output).unwrap();
 
         let partitions = get_disk_partitions(&disk);
         if partitions.len() != 7 {
@@ -85,7 +85,7 @@ impl SetupThing for PartitionSetup {
         info!("This is the default expected partition set, good");
 
         // Aaaa why
-        run_command(&format!("sgdisk -e {}", disk), true).unwrap();
+        run_command(&format!("sgdisk -e {}", disk), _options.config.command_output).unwrap();
         // Someone send help
         sleep_millis(2000);
 
@@ -97,7 +97,7 @@ impl SetupThing for PartitionSetup {
         create_partition("quill_boot", 1024 * 10, "quill_recovery");
         create_partition("quill_recovery", 1024 * 80, "quill_main");
 
-        run_command(&format!("sfdisk -r {}", disk), true).unwrap();
+        run_command(&format!("sfdisk -r {}", disk), _options.config.command_output).unwrap();
         sleep_millis(200);
 
         Ok(())

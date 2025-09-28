@@ -29,8 +29,8 @@ impl SetupThing for QuillInit {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
-        run_command("cargo clean", false).expect("Failed to clean quill-init");
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        run_command("cargo clean", _options.config.command_output).expect("Failed to clean quill-init");
         Ok(())
     }
 
@@ -202,7 +202,7 @@ impl SetupThing for QuillInit {
         Ok(())
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 }

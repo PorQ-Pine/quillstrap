@@ -25,10 +25,10 @@ impl SetupThing for SlintGallery {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         run_command(
             "cargo clean",
-            true,
+            _options.config.command_output,
         )
         .unwrap();
         Ok(())
@@ -120,7 +120,7 @@ impl SetupThing for SlintGallery {
         todo!();
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 }

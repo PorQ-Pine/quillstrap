@@ -30,7 +30,7 @@ pub fn manual_main(options: Options) {
         dir_change(&format!("{}{}", impl_name.path(), impl_name.name()));
 
         impl_name
-            .clean()
+            .clean(&options)
             .expect(&format!("Failed to clean for {}", name));
 
         dir_change(&cur_dir);
@@ -77,7 +77,7 @@ pub fn manual_main(options: Options) {
         mkdir_p(impl_name.path());
         dir_change(&format!("{}{}", impl_name.path(), impl_name.name()));
 
-        impl_name.run().expect(&format!("Failed to run {}", name));
+        impl_name.run(&options).expect(&format!("Failed to run {}", name));
 
         dir_change(&cur_dir);
     }

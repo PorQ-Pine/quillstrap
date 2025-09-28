@@ -45,17 +45,17 @@ impl SetupThing for Kernel {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         remove_dir_all("../initrd/initrd_base/lib/").ok();
 
         run_command(
             "make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- clean",
-            true,
+            _options.config.command_output,
         )
         .unwrap();
         run_command(
             "make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- distclean",
-            true,
+            _options.config.command_output,
         )
         .unwrap();
         Ok(())
@@ -130,7 +130,7 @@ impl SetupThing for Kernel {
         todo!();
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 }

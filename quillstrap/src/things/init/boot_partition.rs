@@ -26,7 +26,7 @@ impl SetupThing for BootPartition {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 
@@ -79,7 +79,7 @@ impl SetupThing for BootPartition {
         Ok(())
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 }

@@ -25,9 +25,9 @@ impl SetupThing for Qoms {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         dir_change("qoms");
-        run_command("cargo clean", true).unwrap();
+        run_command("cargo clean", _options.config.command_output).unwrap();
         dir_change("../");
         Ok(())
     }
@@ -75,7 +75,7 @@ impl SetupThing for Qoms {
         Ok(())
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         Ok(())
     }
 }

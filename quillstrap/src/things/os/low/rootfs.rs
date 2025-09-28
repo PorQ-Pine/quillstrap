@@ -178,13 +178,13 @@ impl SetupThing for Rootfs {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         umount_recursive(RD);
         if let Err(err) = remove_dir_all("rootfs/") {
             warn!("Failed to remove rootfs: {:?}", err);
         }
         remove_dir_all("out/").ok();
-        remove_file("rootfs.tar.xz", true).ok();
+        remove_file("rootfs.tar.xz", _options.config.command_output).ok();
 
         Ok(())
     }
@@ -510,7 +510,7 @@ impl SetupThing for Rootfs {
         Ok(())
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 }

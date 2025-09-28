@@ -58,12 +58,12 @@ impl SetupThing for RootfsSysroot {
         Ok(())
     }
 
-    fn clean(&self) -> std::result::Result<(), String> {
+    fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         remove_dir_all("sysroot/").ok();
         mkdir_p("sysroot");
         run_command(
             &format!("tar -xJf ../rootfs/rootfs.tar.xz -C sysroot"),
-            true,
+            _options.config.command_output,
         )
         .unwrap();
         Ok(())
@@ -90,7 +90,7 @@ impl SetupThing for RootfsSysroot {
         Ok(())
     }
 
-    fn run(&self) -> std::result::Result<(), String> {
+    fn run(&self, _options: &Options) -> std::result::Result<(), String> {
         Ok(())
     }
 }

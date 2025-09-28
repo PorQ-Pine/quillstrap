@@ -33,7 +33,7 @@ impl SetupThing for Uboot {
         Ok(())
     }
 
-    fn clean(&self) -> std::result::Result<(), String> {
+    fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         todo!()
     }
 
@@ -174,11 +174,11 @@ impl SetupThing for Uboot {
         Ok(())
     }
 
-    fn run(&self) -> std::result::Result<(), String> {
+    fn run(&self, _options: &Options) -> std::result::Result<(), String> {
         info!("Rebooting...");
 
         info!("Running rkdeveloptool reboot");
-        run_command("rkdeveloptool reboot", true).expect("Failed to write logo partition");
+        run_command("rkdeveloptool reboot", _options.config.command_output).expect("Failed to write logo partition");
 
         Ok(())
     }

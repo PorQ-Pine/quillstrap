@@ -28,7 +28,7 @@ impl SetupThing for Rkbin {
         Ok(())
     }
 
-    fn clean(&self) -> std::result::Result<(), String> {
+    fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         // TODO: not sure
         Ok(())
     }
@@ -41,7 +41,7 @@ impl SetupThing for Rkbin {
         Ok(())
     }
 
-    fn run(&self) -> std::result::Result<(), String> {
+    fn run(&self, _options: &Options) -> std::result::Result<(), String> {
         Ok(())
     }
 }

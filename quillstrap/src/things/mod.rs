@@ -88,8 +88,8 @@ impl SetupThing for TraitWrapper {
         forward!(self.get(options))
     }
 
-    fn clean(&self) -> Result<(), String> {
-        forward!(self.clean())
+    fn clean(&self, options: &Options) -> Result<(), String> {
+        forward!(self.clean(options))
     }
 
     fn build(&self, options: &Options) -> Result<(), String> {
@@ -100,8 +100,8 @@ impl SetupThing for TraitWrapper {
         forward!(self.deploy(options))
     }
 
-    fn run(&self) -> Result<(), String> {
-        forward!(self.run())
+    fn run(&self, options: &Options) -> Result<(), String> {
+        forward!(self.run(options))
     }
 }
 

@@ -27,7 +27,7 @@ impl SetupThing for BackupMmc {
         Ok(())
     }
 
-    fn clean(&self) -> color_eyre::eyre::Result<(), String> {
+    fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         warn!("No clean for backup, obviously");
         Ok(())
     }
@@ -42,7 +42,7 @@ impl SetupThing for BackupMmc {
         Ok(())
     }
 
-    fn run(&self) -> color_eyre::eyre::Result<(), String> {
+    fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         warn!("We assume because of expose_mmc deploy, the mmc is exposed as a block device");
 
         let disk = choose_disk();
@@ -58,7 +58,7 @@ impl SetupThing for BackupMmc {
                 "qemu-img convert -p -O qcow2 -c {} pinenote_disk.qcow2",
                 disk
             ),
-            true,
+            _options.config.command_output,
         )
         .unwrap();
 

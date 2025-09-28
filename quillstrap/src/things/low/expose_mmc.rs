@@ -39,7 +39,7 @@ impl SetupThing for ExposeMmc {
         Ok(())
     }
 
-    fn clean(&self) -> std::result::Result<(), String> {
+    fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         remove_file("Image.gz", false).ok();
         remove_file("dtb", false).ok();
         Ok(())
@@ -80,7 +80,7 @@ impl SetupThing for ExposeMmc {
         Ok(())
     }
 
-    fn run(&self) -> std::result::Result<(), String> {
+    fn run(&self, _options: &Options) -> std::result::Result<(), String> {
         Ok(())
     }
 }
