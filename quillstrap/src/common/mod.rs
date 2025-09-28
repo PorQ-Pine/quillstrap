@@ -11,6 +11,7 @@ pub mod mounts;
 pub mod signing;
 pub mod partitions;
 pub mod network;
+pub mod ssh;
 
 // TODO: make this show on the cli as a animation, then it dissapears
 pub fn sleep_millis(ms: u64) {

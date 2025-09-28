@@ -13,7 +13,7 @@ ENV PATH="${PATH}:/root/.cargo/bin"
 RUN apt-get install -y git libxkbcommon-dev libgbm-dev
 
 # quillstrap stuff
-RUN apt-get install -y openssl libssl-dev clang
+RUN apt-get install -y openssl libssl-dev clang sshpass
 
 # U-boot build
 RUN apt-get install -y coreutils device-tree-compiler python3 python3-pyelftools gcc-aarch64-linux-gnu

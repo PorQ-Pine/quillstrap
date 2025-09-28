@@ -25,9 +25,13 @@ pub enum GitPlatform {
 
 #[derive(Serialize, Deserialize, PartialEq, Clone)]
 pub struct QinitOptions {
-    pub deploy_ip_addr: [u8; 4], // Default for us is 192.168.3.2
     pub deploy_ssh_port: u16,
     pub deploy_ftp_port: u16,
+}
+
+#[derive(Serialize, Deserialize, PartialEq, Clone)]
+pub struct RootfsOptions {
+    pub deploy_ssh_port: u16,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Clone)]
@@ -43,7 +47,9 @@ pub struct Config {
     pub root_password: String,
     // Rootfs ssh login. Needs unrestricted to true too
     pub unsecure_debug: bool,
+    pub deploy_ip_addr: [u8; 4], // Default for us is 192.168.3.2
     pub qinit_options: QinitOptions,
+    pub rootfs_options: RootfsOptions,
 }
 
 impl Default for Config {
@@ -57,11 +63,14 @@ impl Default for Config {
             unrestricted: true, // :)
             root_password: "root".to_string(),
             unsecure_debug: false, // :(
+            deploy_ip_addr: [0, 0, 0, 0],
             qinit_options: QinitOptions {
-                deploy_ip_addr: [0, 0, 0, 0],
                 deploy_ssh_port: 2222,
                 deploy_ftp_port: 2221,
             },
+            rootfs_options: RootfsOptions {
+                deploy_ssh_port: 22,
+            }
         }
     }
 }
@@ -112,7 +121,7 @@ impl Config {
     }
 
     pub fn validate(&self) {
-        if self.qinit_options.deploy_ip_addr == [0,0,0,0] {
+        if self.deploy_ip_addr == [0,0,0,0] {
             warn!("The qinit deploy ip address is not set, it will not work!");
         }
     }

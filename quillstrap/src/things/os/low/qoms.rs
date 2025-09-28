@@ -63,14 +63,19 @@ impl SetupThing for Qoms {
             "out/qoms",
         )
         .unwrap();
+        copy_dir_content("scripts/", "out/");
         Ok(())
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        todo!();
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("killall -9 qoms", port, _options);
+        ssh_execute("rm -rf /opt/qoms/*", port, _options);
+        ssh_send("out/*", "/opt/qoms/", port, _options);
+        Ok(())
     }
 
     fn run(&self) -> color_eyre::eyre::Result<(), String> {
-        todo!()
+        Ok(())
     }
 }

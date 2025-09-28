@@ -388,13 +388,6 @@ impl SetupThing for Rootfs {
             // Copy modified binary
             copy_file("../greetd/out/greetd", &format!("{}usr/bin/greetd", RD)).unwrap();
 
-            // Modify config
-            let greetd_config = &format!("{}etc/greetd/config.toml", RD);
-            let file = read_file_str(greetd_config.to_string()).unwrap();
-            if file.contains("agreety --cmd /bin/sh") {
-                replace_string_file(greetd_config, "agreety --cmd /bin/sh", "sleep infinity");
-            }
-
             // TODO: add greetd to excludes now
 
             // Eww
@@ -430,6 +423,11 @@ impl SetupThing for Rootfs {
             );
             Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
         }
+
+        // Qoms
+        let qoms_dir = &format!("{}opt/qoms/", RD);
+        mkdir_p(qoms_dir);
+        copy_dir_content("../qoms/out/", qoms_dir);
 
         // Networking
         Rootfs::execute(

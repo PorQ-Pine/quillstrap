@@ -12,6 +12,7 @@ pub use crate::common::serial::*;
 pub use crate::common::signing::*;
 pub use crate::common::partitions::*;
 pub use crate::common::network::*;
+pub use crate::common::ssh::*;
 pub use crate::common::*;
 pub use crate::config::Config;
 pub use crate::logic::*;

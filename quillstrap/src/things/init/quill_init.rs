@@ -152,13 +152,13 @@ impl SetupThing for QuillInit {
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
         let cur_dir = dir_current();
         dir_change(&QINIT_SRC_DIR);
-
+        // TODO: move this all to ssh commands from common
+        // Also set password for qinit root
         if !_options.args.quill_init_options.qi_ssh_build {
             error!("This is not a ssh build, yet we are deplying to ssh. You have been warned!");
         }
         let ip_str = _options
             .config
-            .qinit_options
             .deploy_ip_addr
             .map(|b| b.to_string())
             .join(".");
