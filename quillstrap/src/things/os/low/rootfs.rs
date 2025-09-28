@@ -357,6 +357,8 @@ impl SetupThing for Rootfs {
             for i in 1..8 {
                 Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
             }
+            /*
+            // Doesn't work :(
             let upower_service_file = &format!("{}usr/lib/systemd/system/greetd.service", RD);
             let file = read_file_str(upower_service_file.to_string()).unwrap();
             if !file.contains("# After=getty@tty1.service") {
@@ -373,6 +375,8 @@ impl SetupThing for Rootfs {
                     "# Conflicts=getty@tty1.service",
                 );
             }
+            */
+
             // Maybe not needed
             Rootfs::execute(
                 RD,
