@@ -72,3 +72,6 @@ RUN set -e; \
     curl -fSL -o /tmp/zig.tar.xz "$url"; \
     tar -xJf /tmp/zig.tar.xz -C /usr/bin --strip-components=1; \
     rm /tmp/zig.tar.xz
+
+# niri
+RUN apt-get install -y git-lfs
