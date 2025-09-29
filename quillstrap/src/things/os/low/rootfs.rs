@@ -437,6 +437,17 @@ impl SetupThing for Rootfs {
         let qoms_dir = &format!("{}opt/qoms/", RD);
         mkdir_p(qoms_dir);
         copy_dir_content("../qoms/out/", qoms_dir);
+        // Qoms service
+        copy_file(
+            "../qoms/other/qoms.service",
+            &format!("{}etc/systemd/system/qoms.service", RD),
+        )
+        .unwrap();
+        Rootfs::execute(
+            RD,
+            "systemctl enable qoms.service",
+            _options.config.command_output,
+        );
 
         // Networking
         Rootfs::execute(
