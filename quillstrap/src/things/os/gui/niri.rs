@@ -35,8 +35,8 @@ impl SetupThing for Niri {
         set_var(
             "PKG_CONFIG_PATH",
             &format!(
-                "{}../../low/rootfs_sysroot/sysroot/usr/lib64/pkgconfig/",
-                full_path
+                "{}../../low/rootfs_sysroot/sysroot/usr/lib64/pkgconfig/:{}../../low/rootfs_sysroot/sysroot/usr/share/pkgconfig",
+                full_path, full_path
             ),
         );
         set_var(
@@ -50,18 +50,16 @@ impl SetupThing for Niri {
         set_var(
             "PKG_CONFIG_LIBDIR",
             &format!(
-                "{}../../low/rootfs_sysroot/sysroot/usr/lib64/pkgconfig/",
-                full_path
+                "{}../../low/rootfs_sysroot/sysroot/usr/lib64/pkgconfig/:{}../../low/rootfs_sysroot/sysroot/usr/share/pkgconfig",
+                full_path, full_path
             ),
         );
 
         run_command(
-            "cargo build --release --target aarch64-unknown-linux-gnu",
+            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
             _options.config.command_output,
         )
         .unwrap();
-
-        todo!();
 
         set_var("PKG_CONFIG_ALLOW_CROSS", "");
         set_var("PKG_CONFIG_SYSROOT_DIR", "");

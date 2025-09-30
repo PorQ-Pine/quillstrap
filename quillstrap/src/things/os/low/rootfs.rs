@@ -37,6 +37,9 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "glib2",
     "pipewire",
     "cairo",
+    "pango",
+    "libdisplay-info",
+    "cairo-gobject",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[

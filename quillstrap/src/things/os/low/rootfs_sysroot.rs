@@ -16,6 +16,9 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "glib2-devel",
     "pipewire-devel",
     "cairo-devel",
+    "pango-devel",
+    "libdisplay-info-devel",
+    "cairo-gobject-devel",
 ];
 
 #[derive(Clone, Copy, Default)]
