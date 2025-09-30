@@ -64,6 +64,7 @@ impl SetupThing for Niri {
         set_var("PKG_CONFIG_ALLOW_CROSS", "");
         set_var("PKG_CONFIG_SYSROOT_DIR", "");
         set_var("RUSTFLAGS", "");
+
         Ok(())
     }
 

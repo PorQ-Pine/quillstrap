@@ -438,6 +438,10 @@ impl SetupThing for Rootfs {
                 _options.config.command_output,
             );
             Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
+
+            // Niri
+            copy_file("../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri", &format!("{}usr/bin/niri", RD)).unwrap();
+            // TODO: Add niri to excludes
         }
 
         // Qoms
