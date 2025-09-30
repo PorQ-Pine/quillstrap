@@ -12,6 +12,10 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "clang",
     "ldd",
     "pam-devel",
+    "libseat-devel",
+    "glib2-devel",
+    "pipewire-devel",
+    "cairo-devel",
 ];
 
 #[derive(Clone, Copy, Default)]

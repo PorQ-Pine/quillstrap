@@ -33,6 +33,10 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "mesa-libgbm",
     "pam",
     "pam-libs",
+    "libseat",
+    "glib2",
+    "pipewire",
+    "cairo",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[

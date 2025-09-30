@@ -9,7 +9,7 @@ impl SetupThing for Niri {
     }
 
     fn path(&self) -> &'static str {
-        "os/gui/niri"
+        "os/gui/"
     }
 
     fn deps(&self) -> Vec<&'static str> {
@@ -30,6 +30,42 @@ impl SetupThing for Niri {
     }
 
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
+        let full_path = get_path_of_thing_native(self, _options);
+        set_var("PKG_CONFIG_ALLOW_CROSS", "1");
+        set_var(
+            "PKG_CONFIG_PATH",
+            &format!(
+                "{}../../low/rootfs_sysroot/sysroot/usr/lib64/pkgconfig/",
+                full_path
+            ),
+        );
+        set_var(
+            "PKG_CONFIG_SYSROOT_DIR",
+            &format!("{}../../low/rootfs_sysroot/sysroot", full_path),
+        );
+        set_var(
+            "RUSTFLAGS",
+            &format!("-L {}../../low/rootfs_sysroot/sysroot/usr/lib64", full_path),
+        );
+        set_var(
+            "PKG_CONFIG_LIBDIR",
+            &format!(
+                "{}../../low/rootfs_sysroot/sysroot/usr/lib64/pkgconfig/",
+                full_path
+            ),
+        );
+
+        run_command(
+            "cargo build --release --target aarch64-unknown-linux-gnu",
+            _options.config.command_output,
+        )
+        .unwrap();
+
+        todo!();
+
+        set_var("PKG_CONFIG_ALLOW_CROSS", "");
+        set_var("PKG_CONFIG_SYSROOT_DIR", "");
+        set_var("RUSTFLAGS", "");
         Ok(())
     }
 
