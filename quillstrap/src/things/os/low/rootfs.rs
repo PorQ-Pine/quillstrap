@@ -563,4 +563,16 @@ pair <MAC_ADDRESS>
 connect <MAC_ADDRESS>
 trust <MAC_ADDRESS>
 exit
+
+to mount the encrypted storage from cli:
+gocryptfs /home/.szybet /home/szybet
+
+To log in from cli: (Remember to kill quillinit via htop)
+also stop qoms: systemctl stop qoms
+export GREETD_SOCK=/run/greetd-X.sock
+tuigreetd
+
+Wayland/niri socket:
+export WAYLAND_DISPLAY=/run/user/1000/wayland-X
+export NIRI_SOCKET=/run/user/1000/niri.wayland-X.sock
 */
