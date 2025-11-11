@@ -94,6 +94,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "nwg-drawer",
     "xournalpp",
     "firefox",
+    "network-manager-applet",
     // Remove once login from qinit works
     "tuigreet",
 ];
@@ -412,7 +413,6 @@ impl SetupThing for Rootfs {
                 "dnf copr enable varlad/eww -y",
                 _options.config.command_output,
             );
-
             Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
 
             // Initial rotation, idk if it's the best way
@@ -440,6 +440,19 @@ impl SetupThing for Rootfs {
             );
             Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
             */
+
+            // Anki
+            // TODO: In config, based on enums choose what to install
+            Rootfs::execute(
+                RD,
+                "dnf copr enable hazel-bunny/anki -y",
+                _options.config.command_output,
+            );
+            Rootfs::execute(
+                RD,
+                "dnf install anki-bin -y",
+                _options.config.command_output,
+            );
 
             // Niri
             copy_file("../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri", &format!("{}usr/bin/niri", RD)).unwrap();
