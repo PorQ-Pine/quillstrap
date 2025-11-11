@@ -1,5 +1,5 @@
 use crate::{
-    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri},
+    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri, os::gui::eww::Eww},
 };
 
 pub mod init;
@@ -34,6 +34,7 @@ pub enum TraitWrapper {
     TwEwwConfig(EwwConfig),
     TwLibQuillCom(LibQuillCom),
     TwNiri(Niri),
+    TwEww(Eww),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -65,6 +66,7 @@ macro_rules! forward {
             TraitWrapper::TwEwwConfig(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwLibQuillCom(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwNiri(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwEww(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -135,6 +137,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwEwwConfig(Default::default()),
         TwLibQuillCom(Default::default()),
         TwNiri(Default::default()),
+        TwEww(Eww::default()),
     ]
 }
 

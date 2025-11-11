@@ -19,6 +19,10 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "pango-devel",
     "libdisplay-info-devel",
     "cairo-gobject-devel",
+    "gtk3-devel",
+    "libdbusmenu-devel",
+    "libdbusmenu-gtk3-devel",
+    "gtk-layer-shell-devel",
 ];
 
 #[derive(Clone, Copy, Default)]

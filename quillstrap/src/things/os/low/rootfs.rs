@@ -40,6 +40,10 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "pango",
     "libdisplay-info",
     "cairo-gobject",
+    "gtk3",
+    "libdbusmenu",
+    "libdbusmenu-gtk3",
+    "gtk-layer-shell",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -414,12 +418,16 @@ impl SetupThing for Rootfs {
             // TODO: add greetd to excludes now
 
             // Eww
+            // We need git
+            /*
             Rootfs::execute(
                 RD,
                 "dnf copr enable varlad/eww -y",
                 _options.config.command_output,
             );
             Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
+            */
+            copy_file("../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww", &format!("{}usr/bin/eww", RD)).unwrap();
 
             // Initial rotation, idk if it's the best way
             // Set in rootfs_config, here we only apply, idk if its needed anyway

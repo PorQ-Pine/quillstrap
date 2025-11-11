@@ -11,6 +11,7 @@ ENV PATH="${PATH}:/root/.cargo/bin"
 
 # VS Code stuff
 RUN apt-get install -y git libxkbcommon-dev libgbm-dev
+RUN git config --global --add safe.directory '*'
 
 # quillstrap stuff
 RUN apt-get install -y openssl libssl-dev clang sshpass
