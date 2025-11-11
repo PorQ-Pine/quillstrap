@@ -50,6 +50,7 @@ pub struct Config {
     pub deploy_ip_addr: [u8; 4], // Default for us is 192.168.3.2
     pub qinit_options: QinitOptions,
     pub rootfs_options: RootfsOptions,
+    pub compression_enabled: bool,
 }
 
 impl Default for Config {
@@ -70,7 +71,8 @@ impl Default for Config {
             },
             rootfs_options: RootfsOptions {
                 deploy_ssh_port: 22,
-            }
+            },
+            compression_enabled: true,
         }
     }
 }

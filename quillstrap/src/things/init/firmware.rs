@@ -45,6 +45,7 @@ impl SetupThing for Firmware {
             )
             .unwrap();
             remove_file("/tmp/firmware.tmp/brcm/BCM4345C0.hcd", true).unwrap();
+            // Firmware should be always compressed. It's just... firmware
             run_command(
                 "mksquashfs /tmp/firmware.tmp /tmp/firmware.squashfs -noappend",
                 _options.config.command_output,

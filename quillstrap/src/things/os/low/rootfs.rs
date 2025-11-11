@@ -514,7 +514,12 @@ impl SetupThing for Rootfs {
         remove_file("out/rootfs.squashfs", false).ok();
         remove_file("out/rootfs.squashfs.dgst", false).ok();
 
-        run_command(&format!("mksquashfs {} out/rootfs.squashfs -b 32768 -comp zstd -Xcompression-level 22 -no-xattrs", RD), true).unwrap();
+        let mksquashfs_cmd = if _options.config.compression_enabled {
+            format!("mksquashfs {} out/rootfs.squashfs -b 32768 -comp zstd -Xcompression-level 22 -no-xattrs", RD)
+        } else {
+            format!("mksquashfs {} out/rootfs.squashfs -no-compression -no-xattrs", RD)
+        };
+        run_command(&mksquashfs_cmd, true).unwrap();
         // Sign
         sign("out/rootfs.squashfs", "out/rootfs.squashfs.dgst", _options);
         Ok(())
