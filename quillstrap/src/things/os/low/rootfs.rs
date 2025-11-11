@@ -432,12 +432,14 @@ impl SetupThing for Rootfs {
             );
 
             // Rnote - welp, doesn't launch
+            /*
             Rootfs::execute(
                 RD,
                 "dnf copr enable fotnite-vevo/rnote fedora-41-aarch64 -y",
                 _options.config.command_output,
             );
             Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
+            */
 
             // Niri
             copy_file("../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri", &format!("{}usr/bin/niri", RD)).unwrap();
@@ -567,8 +569,23 @@ exit
 to mount the encrypted storage from cli:
 gocryptfs /home/.szybet /home/szybet
 
-To log in from cli: (Remember to kill quillinit via htop)
-also stop qoms: systemctl stop qoms
+To init the encrypted storage from cli:
+mkdir /home/.szybet /home/szybet
+gocryptfs -init /home/.szybet
+(Now we need to copy skel there)
+gocryptfs /home/.szybet /home/szybet
+cp -r /etc/skel/\* /home/szybet/ # Remove the \ here
+cp -r /etc/skel/.* /home/szybet/
+sudo chown -R szybet:szybet /home/szybet # Important permissions
+umount /home/szybet
+
+Actually create that user:
+useradd szybet
+passwd szybet
+
+To log in from cli: (Remember to kill quillinit via htop, sort via PID)
+also stop qoms: 
+systemctl stop qoms
 export GREETD_SOCK=/run/greetd-X.sock
 tuigreetd
 
