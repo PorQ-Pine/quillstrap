@@ -97,6 +97,12 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "network-manager-applet",
     // Remove once login from qinit works
     "tuigreet",
+    // Eww tools
+    "pamixer",
+    "dunst",
+    "papirus-icon-theme",
+    "playerctl",
+    "pavucontrol",
 ];
 
 #[derive(Clone, Copy, Default)]
