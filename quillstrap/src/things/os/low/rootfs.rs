@@ -107,6 +107,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "papirus-icon-theme",
     "playerctl",
     "pavucontrol",
+    "rg",
 ];
 
 #[derive(Clone, Copy, Default)]
