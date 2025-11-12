@@ -1,11 +1,12 @@
 use crate::{
-    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri, os::gui::eww::Eww, os::gui::eww_niri_toolbar::EwwNiriToolbar},
+    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri, os::gui::eww::Eww, os::gui::eww_niri_toolbar::EwwNiriToolbar, tests::anvil::Anvil},
 };
 
 pub mod init;
 pub mod low;
 pub mod os;
 pub mod common;
+pub mod tests;
 
 #[derive(Clone, Copy)]
 pub enum TraitWrapper {
@@ -36,6 +37,7 @@ pub enum TraitWrapper {
     TwNiri(Niri),
     TwEww(Eww),
     TwEwwNiriToolbar(EwwNiriToolbar),
+    TwAnvil(Anvil),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -69,6 +71,7 @@ macro_rules! forward {
             TraitWrapper::TwNiri(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwEww(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwEwwNiriToolbar(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwAnvil(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -141,6 +144,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwNiri(Default::default()),
         TwEww(Eww::default()),
         TwEwwNiriToolbar(Default::default()),
+        TwAnvil(Anvil::default()),
     ]
 }
 

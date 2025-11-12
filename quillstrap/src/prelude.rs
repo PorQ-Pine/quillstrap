@@ -44,4 +44,5 @@ pub use crate::os::gui::slint_gallery::*;
 pub use crate::os::gui::eww_config::*;
 pub use crate::things::os::gui::niri::*;
 pub use crate::things::common::libquillcom::*;
+pub use crate::things::tests::anvil::*;
 pub use std::fs::remove_dir_all;
