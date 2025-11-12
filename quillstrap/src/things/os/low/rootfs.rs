@@ -428,6 +428,8 @@ impl SetupThing for Rootfs {
             Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
             */
             copy_file("../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww", &format!("{}usr/bin/eww", RD)).unwrap();
+            // Eww niri toolbar
+            copy_file("../../gui/eww_niri_toolbar/target/aarch64-unknown-linux-gnu/release/eww-niri-taskbar", &format!("{}usr/bin/eww-niri-taskbar", RD)).unwrap();
 
             // Initial rotation, idk if it's the best way
             // Set in rootfs_config, here we only apply, idk if its needed anyway
