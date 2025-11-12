@@ -588,6 +588,9 @@ Command snippets for early rootfs
 connect to wifi:
 nmcli device wifi list
 nmcli device wifi connect "hotspot" password "12345678"
+If it refuses to connect for GUI reasons:
+nmcli connection delete id "hotspot"
+killall nm-applet
 
 Bluetooth keyboard copy line by line:
 bluetoothctl
