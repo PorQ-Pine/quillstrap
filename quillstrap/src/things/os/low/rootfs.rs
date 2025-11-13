@@ -99,6 +99,11 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "xournalpp",
     "firefox",
     "network-manager-applet",
+    "swaybg",
+    // GTK fix
+    "gsettings-desktop-schemas",
+    // Pavucontrol fix
+    "libglvnd-gles",
     // Remove once login from qinit works
     "tuigreet",
     // Eww tools
@@ -610,16 +615,18 @@ gocryptfs /home/.szybet /home/szybet
 To init the encrypted storage from cli:
 mkdir /home/.szybet /home/szybet
 gocryptfs -init /home/.szybet
-(Now we need to copy skel there)
-gocryptfs /home/.szybet /home/szybet
-cp -r /etc/skel/\* /home/szybet/ # Remove the \ here
-cp -r /etc/skel/.* /home/szybet/
-sudo chown -R szybet:szybet /home/szybet # Important permissions
-umount /home/szybet
 
 Actually create that user:
 useradd szybet
 passwd szybet
+
+(Now we need to copy skel there)
+gocryptfs /home/.szybet /home/szybet
+rm -rf /home/szybet/.*
+cp -r /etc/skel/\* /home/szybet/ # Remove the \ here
+cp -r /etc/skel/.* /home/szybet/
+sudo chown -R szybet:szybet /home/szybet # Important permissions
+umount /home/szybet
 
 To log in from cli: (Remember to kill quillinit via htop, sort via PID)
 also stop qoms: 
@@ -627,7 +634,8 @@ systemctl stop qoms
 export GREETD_SOCK=/run/greetd-X.sock
 tuigreetd
 
-Wayland/niri socket:
+Wayland/niri/GUI socket:
 export WAYLAND_DISPLAY=/run/user/1000/wayland-X
 export NIRI_SOCKET=/run/user/1000/niri.wayland-X.sock
+export XDG_RUNTIME_DIR=/run/user/1000/
 */
