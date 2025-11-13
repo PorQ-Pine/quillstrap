@@ -100,6 +100,9 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "firefox",
     "network-manager-applet",
     "swaybg",
+    // Sound
+    "pipewire-pulse",
+    "pipewire",
     // GTK fix
     "gsettings-desktop-schemas",
     // Pavucontrol fix
