@@ -113,6 +113,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "playerctl",
     "pavucontrol",
     "rg",
+    "jq",
 ];
 
 #[derive(Clone, Copy, Default)]
@@ -637,5 +638,6 @@ tuigreetd
 Wayland/niri/GUI socket:
 export WAYLAND_DISPLAY=/run/user/1000/wayland-X
 export NIRI_SOCKET=/run/user/1000/niri.wayland-X.sock
-export XDG_RUNTIME_DIR=/run/user/1000/
+export XDG_RUNTIME_DIR="/run/user/$UID"
+export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
 */
