@@ -103,6 +103,8 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     // Sound
     "pipewire-pulse",
     "pipewire",
+    // Virtual keyboard
+    "squeekboard",
     // GTK fix
     "gsettings-desktop-schemas",
     // Pavucontrol fix
