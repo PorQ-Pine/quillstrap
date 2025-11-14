@@ -115,6 +115,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pamixer",
     "dunst",
     "papirus-icon-theme",
+    "papirus-icon-theme-dark",
     "playerctl",
     "pavucontrol",
     "rg",
