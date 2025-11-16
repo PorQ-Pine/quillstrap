@@ -105,6 +105,9 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pipewire",
     // Virtual keyboard
     "squeekboard",
+    // Fix for Qt stuff
+    "qt6-qtwayland",
+    "qt5-qtwayland",
     // GTK fix
     "gsettings-desktop-schemas",
     // Pavucontrol fix
@@ -440,7 +443,11 @@ impl SetupThing for Rootfs {
             );
             Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
             */
-            copy_file("../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww", &format!("{}usr/bin/eww", RD)).unwrap();
+            copy_file(
+                "../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww",
+                &format!("{}usr/bin/eww", RD),
+            )
+            .unwrap();
             // Eww niri toolbar
             copy_file("../../gui/eww_niri_toolbar/target/aarch64-unknown-linux-gnu/release/eww-niri-taskbar", &format!("{}usr/bin/eww-niri-taskbar", RD)).unwrap();
 
@@ -484,7 +491,11 @@ impl SetupThing for Rootfs {
             );
 
             // Niri
-            copy_file("../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri", &format!("{}usr/bin/niri", RD)).unwrap();
+            copy_file(
+                "../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri",
+                &format!("{}usr/bin/niri", RD),
+            )
+            .unwrap();
             // TODO: Add niri to excludes
         }
 
@@ -530,9 +541,15 @@ impl SetupThing for Rootfs {
         remove_file("out/rootfs.squashfs.dgst", false).ok();
 
         let mksquashfs_cmd = if _options.config.compression_enabled {
-            format!("mksquashfs {} out/rootfs.squashfs -b 32768 -comp zstd -Xcompression-level 22 -no-xattrs", RD)
+            format!(
+                "mksquashfs {} out/rootfs.squashfs -b 32768 -comp zstd -Xcompression-level 22 -no-xattrs",
+                RD
+            )
         } else {
-            format!("mksquashfs {} out/rootfs.squashfs -no-compression -no-xattrs", RD)
+            format!(
+                "mksquashfs {} out/rootfs.squashfs -no-compression -no-xattrs",
+                RD
+            )
         };
         run_command(&mksquashfs_cmd, true).unwrap();
         // Sign
@@ -636,7 +653,7 @@ sudo chown -R szybet:szybet /home/szybet # Important permissions
 umount /home/szybet
 
 To log in from cli: (Remember to kill quillinit via htop, sort via PID)
-also stop qoms: 
+also stop qoms:
 systemctl stop qoms
 export GREETD_SOCK=/run/greetd-X.sock
 tuigreetd
