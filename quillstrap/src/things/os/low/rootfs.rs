@@ -497,6 +497,18 @@ impl SetupThing for Rootfs {
             )
             .unwrap();
             // TODO: Add niri to excludes
+
+            // Koreader
+            copy_file(
+                "../../gui/koreader/koreader.AppImage",
+                &format!("{}usr/bin/koreader.AppImage", RD),
+            )
+            .unwrap();
+            copy_file(
+                "../../gui/koreader/koreader.desktop",
+                &format!("{}usr/share/applications/koreader.desktop", RD),
+            )
+            .unwrap();
         }
 
         // Qoms

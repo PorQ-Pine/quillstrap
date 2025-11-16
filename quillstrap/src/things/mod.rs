@@ -1,5 +1,5 @@
 use crate::{
-    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri, os::gui::eww::Eww, os::gui::eww_niri_toolbar::EwwNiriToolbar, tests::anvil::Anvil},
+    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri, os::gui::eww::Eww, os::gui::eww_niri_toolbar::EwwNiriToolbar, os::gui::koreader::Koreader, tests::anvil::Anvil},
 };
 
 pub mod init;
@@ -37,6 +37,7 @@ pub enum TraitWrapper {
     TwNiri(Niri),
     TwEww(Eww),
     TwEwwNiriToolbar(EwwNiriToolbar),
+    TwKoreader(Koreader),
     TwAnvil(Anvil),
 }
 
@@ -71,6 +72,7 @@ macro_rules! forward {
             TraitWrapper::TwNiri(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwEww(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwEwwNiriToolbar(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwKoreader(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwAnvil(inner) => inner.$method($($($arg),*)?),
         }
     };
@@ -144,6 +146,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwNiri(Default::default()),
         TwEww(Eww::default()),
         TwEwwNiriToolbar(Default::default()),
+        TwKoreader(Default::default()),
         TwAnvil(Anvil::default()),
     ]
 }

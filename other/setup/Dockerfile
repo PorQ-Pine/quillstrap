@@ -76,3 +76,6 @@ RUN set -e; \
 
 # niri
 RUN apt-get install -y git-lfs
+
+# Koreader
+RUN apt-get install -y alien
