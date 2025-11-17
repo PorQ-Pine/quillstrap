@@ -81,6 +81,8 @@ impl SetupThing for EwwDataProvider {
         ssh_execute("killall -9 eww-data-provider", port, _options);
         ssh_execute("rm -rf /usr/bin/eww-data-provider", port, _options);
         ssh_send("eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider", "/usr/bin/eww-data-provider", port, _options);
+        // We do not kill it, kill eww manually
+        ssh_send("eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", "/usr/bin/eww-data-requester", port, _options);
         Ok(())
     }
 
