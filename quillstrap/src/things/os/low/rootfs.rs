@@ -103,6 +103,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     // Sound
     "pipewire-pulse",
     "pipewire",
+    "pulseaudio-utils",
     // Virtual keyboard
     "squeekboard",
     // Fix for Qt stuff
