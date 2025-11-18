@@ -13,6 +13,7 @@ const ESSENTIAL_PACKAGES: &[&str] = &[
     "NetworkManager-wifi",
     "cracklib-dicts",
     "gocryptfs",
+    "sudo",
 ];
 
 // Also installed in sysroot
