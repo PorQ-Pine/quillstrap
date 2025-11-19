@@ -3,10 +3,11 @@ use crate::prelude::*;
 const KOREADER_DEB_URL: &str = "https://github.com/koreader/koreader/releases/download/v2025.10/koreader-appimage-aarch64-v2025.10.AppImage";
 
 // Too lazy to set proper icon
+// Yes, full path, I debugged this for far too long.
 const KOREADER_DESKTOP: &str = r#"[Desktop Entry]
 Name=KOReader
 Exec=/usr/bin/koreader.AppImage
-Icon=bookreader
+Icon=/usr/share/icons/Papirus/64x64/apps/bookreader.svg
 Type=Application
 Categories=Education;Utility;
 Comment=Read eBooks on your device
@@ -36,8 +37,13 @@ impl SetupThing for Koreader {
     fn get(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
         mkdir_p("koreader");
         dir_change("koreader");
-        download_file(KOREADER_DEB_URL, "koreader.AppImage");
-        run_command("chmod +x koreader.AppImage", true).unwrap();
+        if !path_exists("koreader.AppImage") {
+            download_file(KOREADER_DEB_URL, "koreader.AppImage");
+            run_command("chmod +x koreader.AppImage", true).unwrap();
+        } else {
+            warn!("Not downloading new koreader appimage, it's already present");
+        }
+        remove_file("koreader.desktop", false).ok();
         append_to_file("koreader.desktop", KOREADER_DESKTOP);
         Ok(())
     }

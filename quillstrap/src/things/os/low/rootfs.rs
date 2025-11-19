@@ -93,8 +93,8 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "tilix", // I can't configure it's default terminal font from here... Anyway the gui allows to change it easily
     "bluez",
     "bluez-tools",
-    // Breaks bluetoothctl?
-    // "blueman",
+    // Breaks bluetoothctl? - seems to work just fine now
+    "blueman",
     "dejavu-fonts-all",
     "nwg-drawer",
     "xournalpp",
