@@ -538,17 +538,34 @@ impl SetupThing for Rootfs {
             &format!("{}usr/bin/pinenote-service", RD),
         )
         .unwrap();
+        let pinenote_service = &format!("{}etc/systemd/user/pinenote.service", RD);
         copy_file(
             "../pinenote_service/packaging/resources/pinenote.service",
-            &format!("{}etc/systemd/user/pinenote.service", RD),
+            pinenote_service,
         )
         .unwrap();
+        let pinenote_service_str = read_file_str(pinenote_service.to_string()).unwrap();
+        if pinenote_service_str.contains("WantedBy=graphical-session.target") {
+            replace_string_file(
+                pinenote_service,
+                "WantedBy=graphical-session.target",
+                "WantedBy=default.target",
+            );
+        }
         copy_file(
             "../pinenote_service/packaging/resources/org.pinenote.PineNoteCtl.service",
-            &format!("{}usr/share/dbus-1/services/org.pinenote.PineNoteCtl.service", RD),
+            &format!(
+                "{}usr/share/dbus-1/services/org.pinenote.PineNoteCtl.service",
+                RD
+            ),
         )
         .unwrap();
-        // Enabled by user preset in rootfs-config
+        // Idk if the user preset is needed anymore in rootfs-configs
+        Rootfs::execute(
+            RD,
+            "systemctl --global enable pinenote",
+            _options.config.command_output,
+        );
 
         // Networking
         Rootfs::execute(
