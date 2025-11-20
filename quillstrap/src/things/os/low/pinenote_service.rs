@@ -9,7 +9,7 @@ impl SetupThing for PinenoteService {
     }
 
     fn path(&self) -> &'static str {
-        "os/gui/"
+        "os/low/"
     }
 
     fn deps(&self) -> Vec<&'static str> {
@@ -56,7 +56,7 @@ impl SetupThing for PinenoteService {
         );
 
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            "cargo zigbuild --no-default-features --release --target aarch64-unknown-linux-gnu.2.41",
             _options.config.command_output,
         )
         .unwrap();
@@ -69,7 +69,12 @@ impl SetupThing for PinenoteService {
     }
 
     fn deploy(&self, _options: &Options) -> Result<(), String> {
-        todo!()
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("systemctl stop pinenote", port, _options);
+        ssh_execute("killall -9 pinenote-service", port, _options);
+        ssh_execute("rm -rf /usr/bin/pinenote-service", port, _options);
+        ssh_send("target/aarch64-unknown-linux-gnu/release/pinenote-service", "/usr/bin/pinenote-service", port, _options);
+        Ok(())
     }
 
     fn run(&self, _options: &Options) -> Result<(), String> {

@@ -532,6 +532,24 @@ impl SetupThing for Rootfs {
             _options.config.command_output,
         );
 
+        // Pinenote service
+        copy_file(
+            "../pinenote_service/target/aarch64-unknown-linux-gnu/release/pinenote-service",
+            &format!("{}usr/bin/pinenote-service", RD),
+        )
+        .unwrap();
+        copy_file(
+            "../pinenote_service/packaging/resources/pinenote-fedora.service",
+            &format!("{}etc/systemd/user/pinenote.service", RD),
+        )
+        .unwrap();
+        copy_file(
+            "../pinenote_service/packaging/resources/org.pinenote.PineNoteCtl.service",
+            &format!("{}usr/share/dbus-1/services/org.pinenote.PineNoteCtl.service", RD),
+        )
+        .unwrap();
+        // Enabled by user preset in rootfs-config
+
         // Networking
         Rootfs::execute(
             RD,
