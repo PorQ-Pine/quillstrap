@@ -1,11 +1,9 @@
-use crate::{
-    prelude::*, things::{common::libquillcom::LibQuillCom, os::low::rootfs_configs::RootfsConfigs, os::gui::niri::Niri, os::gui::eww::Eww, os::gui::eww_niri_toolbar::EwwNiriToolbar, os::gui::koreader::Koreader, os::gui::eww_data_provider::EwwDataProvider, tests::anvil::Anvil},
-};
+use crate::prelude::*;
 
+pub mod common;
 pub mod init;
 pub mod low;
 pub mod os;
-pub mod common;
 pub mod tests;
 
 #[derive(Clone, Copy)]
@@ -40,6 +38,7 @@ pub enum TraitWrapper {
     TwKoreader(Koreader),
     TwEwwDataProvider(EwwDataProvider),
     TwAnvil(Anvil),
+    TwPinenoteService(PinenoteService),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -76,6 +75,7 @@ macro_rules! forward {
             TraitWrapper::TwKoreader(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwAnvil(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwEwwDataProvider(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwPinenoteService(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -151,6 +151,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwKoreader(Default::default()),
         TwEwwDataProvider(Default::default()),
         TwAnvil(Anvil::default()),
+        TwPinenoteService(Default::default()),
     ]
 }
 
@@ -164,5 +165,9 @@ pub fn get_thing_by_name(name: &str, things: &Vec<TraitWrapper>) -> TraitWrapper
     for thing in things.iter() {
         names.push(thing.name());
     }
-    panic!("You probably mistyped this: {}. Possible options: {}", name, names.join(" "));
+    panic!(
+        "You probably mistyped this: {}. Possible options: {}",
+        name,
+        names.join(" ")
+    );
 }
