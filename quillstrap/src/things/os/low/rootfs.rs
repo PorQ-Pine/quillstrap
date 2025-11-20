@@ -539,7 +539,7 @@ impl SetupThing for Rootfs {
         )
         .unwrap();
         copy_file(
-            "../pinenote_service/packaging/resources/pinenote-fedora.service",
+            "../pinenote_service/packaging/resources/pinenote.service",
             &format!("{}etc/systemd/user/pinenote.service", RD),
         )
         .unwrap();
