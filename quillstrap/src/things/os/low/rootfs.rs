@@ -182,7 +182,18 @@ impl SetupThing for Rootfs {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["rootfs_configs", "greetd", "eww_config"]
+        vec![
+            "rootfs_configs",
+            "greetd",
+            "eww_config",
+            "eww_data_provider",
+            "eww_niri_toolbar",
+            "eww",
+            "koreader",
+            "niri",
+            "pinenote_service",
+            "qoms",
+        ]
     }
 
     fn git(&self) -> &'static str {

@@ -39,7 +39,8 @@ impl SetupThing for RootfsSysroot {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["rootfs"]
+        // Nothing, as we only need "get" rootfs
+        vec![]
     }
 
     fn git(&self) -> &'static str {
