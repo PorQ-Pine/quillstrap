@@ -17,7 +17,7 @@ impl SetupThing for QuillInit {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["sysroot", "branding"]
+        vec!["sysroot"]
     }
 
     fn git(&self) -> &'static str {

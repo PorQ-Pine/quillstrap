@@ -13,8 +13,8 @@ impl SetupThing for EinkKernelMagic {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        // Backup from low
-        vec![]
+        // Backup from low, the partitions
+        vec!["backup"]
     }
 
     fn git(&self) -> &'static str {

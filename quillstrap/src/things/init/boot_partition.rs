@@ -14,7 +14,7 @@ impl SetupThing for BootPartition {
 
     fn deps(&self) -> Vec<&'static str> {
         // Initrd, firmware, eink_kernel_magic
-        vec!["expose_mmc", "partition_setup"]
+        vec![]
     }
 
     fn git(&self) -> &'static str {

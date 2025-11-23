@@ -18,7 +18,7 @@ impl SetupThing for InitRD {
 
     fn deps(&self) -> Vec<&'static str> {
         // Also kernel repo for .commit
-        vec!["alpine-chroot-install"]
+        vec!["alpine-chroot-install", "kernel"]
     }
 
     fn git(&self) -> &'static str {
