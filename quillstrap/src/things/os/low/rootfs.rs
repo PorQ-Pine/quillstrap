@@ -105,6 +105,13 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pipewire-pulse",
     "pipewire",
     "pulseaudio-utils",
+    "rhythmbox", // If someone has a better default music app, let me know ;p
+    // Audio codecs
+    "gstreamer1-plugins-base",
+    "gstreamer1-plugins-good",
+    "gstreamer1-plugins-bad-free",
+    "gstreamer1-plugins-bad-free-extras",
+    "gstreamer1-libav",
     // Virtual keyboard
     "squeekboard",
     // Fix for Qt stuff
