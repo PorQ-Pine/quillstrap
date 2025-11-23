@@ -13,7 +13,7 @@ impl SetupThing for Backup {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["expose_mmc"]
+        vec![]
     }
 
     fn git(&self) -> &'static str {
@@ -27,10 +27,15 @@ impl SetupThing for Backup {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("uboot.bin")
+        let status = path_exists("uboot.bin")
             && path_exists("waveform.bin")
             && path_exists("uboot_env.bin")
-            && path_exists("logo.bin")
+            && path_exists("logo.bin");
+
+        if !status {
+            error!("Backup is an exception here, you need to run it (take the backup) to assume it's built.");
+        }
+        status
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {

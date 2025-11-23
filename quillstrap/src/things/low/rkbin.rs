@@ -14,7 +14,7 @@ impl SetupThing for Rkbin {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        Vec::new()
+        vec![]
     }
 
     fn git(&self) -> &'static str {

@@ -6,7 +6,7 @@ pub trait SetupThing: Copy + Clone {
     // Relative path to this folder's path, created one folder up (../), ends with / (will still be in the repository) - it should almost always be the path like its in quillstrap
     // So like uboot is in things/low/uboot in this project then his path is low/
     fn path(&self) -> &'static str;
-    // List of deps (depending on arguments, to be built before a target)
+    // List of deps (depending on arguments, to be built before a target). So deps *only* needed to build it
     fn deps(&self) -> Vec<&'static str>;
     // Not sure
     // fn deep_deps() -> Vec< &'static str>; // Deep deps, where deps is just what is necceserry to run, deep deps is everything that is needed to run

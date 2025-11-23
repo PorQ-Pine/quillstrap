@@ -21,7 +21,7 @@ impl SetupThing for Uboot {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["rkbin", "backup_mmc"]
+        vec![]
     }
 
     fn git(&self) -> &'static str {
