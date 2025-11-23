@@ -14,7 +14,7 @@ impl SetupThing for BackupMmc {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["expose_mmc"]
+        vec![]
     }
 
     fn git(&self) -> &'static str {
