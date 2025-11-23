@@ -25,6 +25,11 @@ impl SetupThing for EwwDataProvider {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("eww-data-provider/target/aarch64-unknown-linux-gnu.2.41/release/eww-data-provider") &&
+        path_exists("eww-data-requester/target/aarch64-unknown-linux-gnu.2.41/release/eww-data-requester")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         Ok(())
     }

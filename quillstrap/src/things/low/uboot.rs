@@ -33,6 +33,10 @@ impl SetupThing for Uboot {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("uboot.img")
+    }
+
     fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         todo!()
     }

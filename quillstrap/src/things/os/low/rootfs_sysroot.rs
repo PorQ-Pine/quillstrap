@@ -69,6 +69,11 @@ impl SetupThing for RootfsSysroot {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        // Welp yea
+        path_exists("sysroot/usr/bin/zsh")
+    }
+
     fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         remove_dir_all("sysroot/").ok();
         mkdir_p("sysroot");

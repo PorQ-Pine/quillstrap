@@ -26,6 +26,13 @@ impl SetupThing for Backup {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("uboot.bin")
+            && path_exists("waveform.bin")
+            && path_exists("uboot_env.bin")
+            && path_exists("logo.bin")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         warn!("No clean for backup, obviously");
         Ok(())

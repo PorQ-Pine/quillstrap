@@ -26,6 +26,13 @@ impl SetupThing for EinkKernelMagic {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        if path_exists("custom_wf.bin") {
+            return true
+        }
+        false
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
@@ -33,7 +40,13 @@ impl SetupThing for EinkKernelMagic {
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
         run_command("chmod +x wbf_to_custom.py", false).unwrap();
         run_command("./wbf_to_custom.py ../../low/backup/waveform.bin", true).unwrap();
-        // TODO check
+        
+        if !self.is_built() {
+            let err = "Failed to generate custom_wf.bin";
+            error!("{}", err);
+            return Err(err.to_string());
+        }
+
         Ok(())
     }
 

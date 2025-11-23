@@ -101,6 +101,10 @@ impl SetupThing for TraitWrapper {
         forward!(self.get(options))
     }
 
+    fn is_built(&self) -> bool {
+        forward!(self.is_built())
+    }
+
     fn clean(&self, options: &Options) -> Result<(), String> {
         forward!(self.clean(options))
     }

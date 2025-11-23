@@ -25,6 +25,10 @@ impl SetupThing for PartitionSetup {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        true
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
@@ -47,7 +51,11 @@ impl SetupThing for PartitionSetup {
         let disk = choose_disk();
 
         info!("Look:");
-        run_command(&format!("gdisk -l {}", disk), _options.config.command_output).unwrap();
+        run_command(
+            &format!("gdisk -l {}", disk),
+            _options.config.command_output,
+        )
+        .unwrap();
 
         let partitions = get_disk_partitions(&disk);
         if partitions.len() != 7 {
@@ -85,7 +93,11 @@ impl SetupThing for PartitionSetup {
         info!("This is the default expected partition set, good");
 
         // Aaaa why
-        run_command(&format!("sgdisk -e {}", disk), _options.config.command_output).unwrap();
+        run_command(
+            &format!("sgdisk -e {}", disk),
+            _options.config.command_output,
+        )
+        .unwrap();
         // Someone send help
         sleep_millis(2000);
 
@@ -97,7 +109,11 @@ impl SetupThing for PartitionSetup {
         create_partition("quill_boot", 1024 * 10, "quill_recovery");
         create_partition("quill_recovery", 1024 * 80, "quill_main");
 
-        run_command(&format!("sfdisk -r {}", disk), _options.config.command_output).unwrap();
+        run_command(
+            &format!("sfdisk -r {}", disk),
+            _options.config.command_output,
+        )
+        .unwrap();
         sleep_millis(200);
 
         Ok(())

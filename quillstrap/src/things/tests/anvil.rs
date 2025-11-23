@@ -29,6 +29,11 @@ impl SetupThing for Anvil {
         Ok(())
     }
 
+    // no one cares
+    fn is_built(&self) -> bool {
+        true
+    }
+
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
         dir_change("anvil");
 
@@ -49,7 +54,10 @@ impl SetupThing for Anvil {
         );
         set_var(
             "RUSTFLAGS",
-            &format!("-L {}../../os/low/rootfs_sysroot/sysroot/usr/lib64", full_path),
+            &format!(
+                "-L {}../../os/low/rootfs_sysroot/sysroot/usr/lib64",
+                full_path
+            ),
         );
         set_var(
             "PKG_CONFIG_LIBDIR",

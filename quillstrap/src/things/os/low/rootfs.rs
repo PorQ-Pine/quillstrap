@@ -226,6 +226,10 @@ impl SetupThing for Rootfs {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("out/rootfs.squashfs") && path_exists("out/rootfs.squashfs.dgst")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         umount_recursive(RD);
         if let Err(err) = remove_dir_all("rootfs/") {

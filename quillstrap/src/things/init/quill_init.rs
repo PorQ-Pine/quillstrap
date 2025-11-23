@@ -29,6 +29,10 @@ impl SetupThing for QuillInit {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("out/qinit") && path_exists("out/init")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         run_command("cargo clean", _options.config.command_output).expect("Failed to clean quill-init");
         Ok(())

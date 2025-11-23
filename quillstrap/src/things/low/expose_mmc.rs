@@ -39,6 +39,10 @@ impl SetupThing for ExposeMmc {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        true
+    }
+
     fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         remove_file("Image.gz", false).ok();
         remove_file("dtb", false).ok();

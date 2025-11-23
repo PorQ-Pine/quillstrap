@@ -30,6 +30,10 @@ impl SetupThing for InitRD {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("initrd_alpine/.commit")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         remove_dir_all("initrd_alpine").ok();
         Ok(())

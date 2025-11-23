@@ -68,6 +68,11 @@ impl SetupThing for Sysroot {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        // This sucks but whatever
+        path_exists(&format!("root/.bashrc"))
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }

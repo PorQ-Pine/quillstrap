@@ -45,6 +45,10 @@ impl SetupThing for Kernel {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("out/Image.gz") && path_exists("out/DTB")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         remove_dir_all("../initrd/initrd_base/lib/").ok();
 

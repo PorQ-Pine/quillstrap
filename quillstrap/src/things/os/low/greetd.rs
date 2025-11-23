@@ -25,6 +25,10 @@ impl SetupThing for Greetd {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("out/greetd")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         dir_change("greetd");
         run_command("cargo clean", _options.config.command_output).unwrap();

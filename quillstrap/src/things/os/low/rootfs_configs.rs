@@ -25,6 +25,10 @@ impl SetupThing for RootfsConfigs {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        true
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         Ok(())
     }

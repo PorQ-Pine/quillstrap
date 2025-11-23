@@ -12,6 +12,7 @@ pub trait SetupThing: Copy + Clone {
     // fn deep_deps() -> Vec< &'static str>; // Deep deps, where deps is just what is necceserry to run, deep deps is everything that is needed to run
     fn git(&self) -> &'static str; // Git repo name, the link and type (ssh, https) depends on the configuration
     fn get(&self, options: &Options) -> Result<(), String>; // How to get it, also updates it (git pull or else)
+    fn is_built(&self) -> bool; // Checks if it's build already. Does not check if something changed, simply checks if anything is build (even old versions)
     // All of those functions assume we are in the proper directory / repo already
     // Except get!
     fn clean(&self, options: &Options) -> Result<(), String>; // Cleans all build-related files (DO NOT do git reset --hard)
@@ -43,6 +44,10 @@ impl SetupThing for _ExampleImpl {
 
     fn get(&self, _options: &Options) -> Result<(), String> {
         todo!()
+    }
+
+    fn is_built(&self) -> bool {
+        false
     }
 
     fn clean(&self, _options: &Options) -> Result<(), String> {

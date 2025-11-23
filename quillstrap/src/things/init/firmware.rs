@@ -25,6 +25,10 @@ impl SetupThing for Firmware {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("out/wifi_bt/firmware.squashfs")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }

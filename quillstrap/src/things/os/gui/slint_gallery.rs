@@ -25,6 +25,10 @@ impl SetupThing for SlintGallery {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        path_exists("out/slint_gallery_rootfs") && path_exists("out/slint_gallery_initrd")
+    }
+
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         run_command(
             "cargo clean",

@@ -28,6 +28,10 @@ impl SetupThing for SerialLaunch {
         Ok(())
     }
 
+    fn is_built(&self) -> bool {
+        true
+    }
+    
     fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
         Ok(())
     }
