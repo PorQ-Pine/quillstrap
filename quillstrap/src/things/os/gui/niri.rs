@@ -13,7 +13,7 @@ impl SetupThing for Niri {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec![]
+        vec!["rootfs_sysroot"]
     }
 
     fn git(&self) -> &'static str {

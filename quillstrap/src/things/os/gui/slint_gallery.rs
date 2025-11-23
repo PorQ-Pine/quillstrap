@@ -13,7 +13,7 @@ impl SetupThing for SlintGallery {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec![]
+        vec!["rootfs_sysroot", "sysroot"]
     }
 
     fn git(&self) -> &'static str {
