@@ -26,7 +26,7 @@ impl SetupThing for Eww {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("target/aarch64-unknown-linux-gnu.2.41/release/eww")
+        path_exists("target/aarch64-unknown-linux-gnu/release/eww")
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {

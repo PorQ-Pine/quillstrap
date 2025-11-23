@@ -20,6 +20,22 @@ pub fn manual_main(options: Options) {
         dir_change(&cur_dir);
     }
 
+    // Now we check if built
+    for name in options.clone().args.is_built {
+        let impl_name = get_thing_by_name(&name, &options.things);
+
+        let cur_dir = dir_current();
+        mkdir_p(impl_name.path());
+        dir_change(&format!("{}{}", impl_name.path(), impl_name.name()));
+
+        if impl_name.is_built() {
+            info!("{} is built", name);
+        } else {
+            error!("{} is not built", name);
+        }
+        dir_change(&cur_dir);
+    }
+
     // Now we clean
     for name in options.clone().args.clean {
         let impl_name = get_thing_by_name(&name, &options.things);

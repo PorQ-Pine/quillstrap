@@ -26,7 +26,7 @@ impl SetupThing for PinenoteService {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("target/aarch64-unknown-linux-gnu.2.41/release/pinenote-service")
+        path_exists("target/aarch64-unknown-linux-gnu/release/pinenote-service")
     }
 
     fn clean(&self, _options: &Options) -> Result<(), String> {

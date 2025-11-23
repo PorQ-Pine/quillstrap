@@ -9,7 +9,7 @@ impl SetupThing for LibQuillCom {
     }
 
     fn path(&self) -> &'static str {
-        "common"
+        "common/"
     }
 
     fn deps(&self) -> Vec<&'static str> {

@@ -48,6 +48,12 @@ pub struct Args {
     pub deploy: Vec<String>,
     #[arg(short, long, help = "A single thing to run", help_heading = GENERAL_OPTIONS)]
     pub run: Option<String>,
+    #[arg(
+        long,
+        help = "Things to check if they are built, seperated by space. Possible all option",
+        num_args = 1.., help_heading = GENERAL_OPTIONS
+    )]
+    pub is_built: Vec<String>,
 
     #[command(flatten)]
     pub quill_init_options: QuillInitOptions,
@@ -88,8 +94,23 @@ impl Args {
             && args.clean.is_empty()
             && args.deploy.is_empty()
             && args.run.is_none()
+            && args.is_built.is_empty()
         {
             panic!("No action selected to be done!");
+        }
+
+        if !args.is_built.is_empty() {
+            if !args.build.is_empty()
+                || !args.get.is_empty()
+                || !args.clean.is_empty()
+                || !args.deploy.is_empty()
+                || args.run.is_some()
+            {
+                panic!("When --is-built is used, no other action can be selected!");
+            }
+            if !args.manual_mode {
+                panic!("--is-built can only be used in manual mode!");
+            }
         }
 
         if args.get.len() == 1 && args.get[0] == "all" {
@@ -98,6 +119,14 @@ impl Args {
                 args.get.push(thing.name().to_string());
             }
         }
+
+        if args.is_built.len() == 1 && args.is_built[0] == "all" {
+            args.is_built.clear();
+            for thing in get_things() {
+                args.is_built.push(thing.name().to_string());
+            }
+        }
+        info!("dfsa {:?}", args.is_built);
 
         args
     }

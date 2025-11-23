@@ -26,7 +26,7 @@ impl SetupThing for EwwNiriToolbar {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("target/aarch64-unknown-linux-gnu.2.41/release/eww-niri-toolbar")
+        path_exists("target/aarch64-unknown-linux-gnu/release/eww-niri-taskbar")
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
