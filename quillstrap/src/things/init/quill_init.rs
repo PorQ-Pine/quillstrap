@@ -4,7 +4,7 @@ pub const QINIT_SRC_DIR: &str = "qinit/";
 pub const QINIT_BINARY: &str = "qinit";
 pub const QINIT_GUI_ONLY_SUFFIX: &str = "_gui_only";
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct QuillInit;
 
 impl SetupThing for QuillInit {

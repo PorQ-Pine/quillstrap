@@ -134,7 +134,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "jq",
 ];
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Rootfs;
 
 impl Rootfs {

@@ -20,7 +20,7 @@ pub fn manual_main(options: Options) {
         dir_change(&cur_dir);
     }
 
-    // Now we check if built
+    // Now we check if is built
     for name in options.clone().args.is_built {
         let impl_name = get_thing_by_name(&name, &options.things);
 

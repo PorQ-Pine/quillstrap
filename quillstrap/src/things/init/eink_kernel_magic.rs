@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct EinkKernelMagic;
 
 impl SetupThing for EinkKernelMagic {

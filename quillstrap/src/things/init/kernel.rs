@@ -2,7 +2,7 @@ use std::fs::remove_dir_all;
 
 use crate::prelude::*;
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Kernel;
 
 impl Kernel {

@@ -25,7 +25,7 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "gtk-layer-shell-devel",
 ];
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct RootfsSysroot;
 
 // https://github.com/PorQ-Pine/rkbin

@@ -6,7 +6,7 @@ pub mod low;
 pub mod os;
 pub mod tests;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum TraitWrapper {
     TWUboot(Uboot),
     TWRkbin(Rkbin),

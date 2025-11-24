@@ -14,7 +14,7 @@ Comment=Read eBooks on your device
 Terminal=false
 "#;
 
-#[derive(Clone, Copy, Default)]
+#[derive(Clone, Copy, Default, Debug)]
 pub struct Koreader;
 
 impl SetupThing for Koreader {

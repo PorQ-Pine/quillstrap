@@ -134,7 +134,18 @@ impl Args {
                 args.is_built.push(thing.name().to_string());
             }
         }
-        info!("dfsa {:?}", args.is_built);
+
+        if args.auto_mode {
+            if !args.get.is_empty()
+                || !args.clean.is_empty()
+                || !args.deploy.is_empty()
+                || args.run.is_some()
+                || !args.is_built.is_empty()
+                || args.d2_graph
+            {
+                panic!("Only build is supported in auto mode");
+            }
+        }
 
         args
     }
