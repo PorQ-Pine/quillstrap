@@ -79,3 +79,17 @@ RUN apt-get install -y git-lfs
 
 # Koreader
 RUN apt-get install -y alien
+
+# D2
+RUN apt-get install -y \
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0t64 \
+    libatk-bridge2.0-0t64 \
+    libatspi2.0-0t64 \
+    libxdamage1 \
+    libasound2t64
+
+RUN curl -fsSL https://d2lang.com/install.sh | sh -s --
+# Should install stuff
+RUN d2 --help

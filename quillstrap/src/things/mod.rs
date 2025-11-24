@@ -127,7 +127,6 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TWUboot(Uboot::default()),
         TWRkbin(Rkbin::default()),
         TWBackup(Backup::default()),
-        TWKernel(Default::default()),
         TWQuillInit(Default::default()),
         TWSysroot(Default::default()),
         TWAlpineChrootInstall(Default::default()),

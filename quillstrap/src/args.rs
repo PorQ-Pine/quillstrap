@@ -55,6 +55,13 @@ pub struct Args {
     )]
     pub is_built: Vec<String>,
 
+    #[arg(
+        long,
+        help = "Generate a D2 graph of things and their dependencies",
+        default_value_t = false, help_heading = GENERAL_OPTIONS
+    )]
+    pub d2_graph: bool,
+
     #[command(flatten)]
     pub quill_init_options: QuillInitOptions,
 
@@ -95,6 +102,7 @@ impl Args {
             && args.deploy.is_empty()
             && args.run.is_none()
             && args.is_built.is_empty()
+            && !args.d2_graph
         {
             panic!("No action selected to be done!");
         }

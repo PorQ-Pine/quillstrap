@@ -2,6 +2,7 @@ use crate::{logic::{auto_mode::auto_main, manual_mode::manual_main}, prelude::*}
 
 pub mod auto_mode;
 pub mod manual_mode;
+pub mod d2_graph;
 
 pub fn choose_mode(options: Options) {
     if options.args.manual_mode {

@@ -17,8 +17,9 @@ impl SetupThing for InitRD {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        // Also kernel repo for .commit
-        vec!["alpine-chroot-install", "kernel"]
+        // Also kernel repo for .commit, but that's only get() I hope
+        // While alpine-chroot-install doesn't need to be built, it makes sense to put it here
+        vec!["alpine-chroot-install"]
     }
 
     fn git(&self) -> &'static str {

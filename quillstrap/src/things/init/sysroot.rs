@@ -56,7 +56,8 @@ impl SetupThing for Sysroot {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec![]
+        // While alpine-chroot-install doesn't need to be built, it makes sense to put it here
+        vec!["alpine-chroot-install"]
     }
 
     fn git(&self) -> &'static str {

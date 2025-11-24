@@ -1,7 +1,7 @@
 use std::env;
-
 use crate::prelude::*;
 
+use crate::logic::d2_graph::generate_d2_graph;
 use crate::things::{TraitWrapper, get_things};
 use crate::{args::Args, logic::choose_mode};
 
@@ -41,6 +41,12 @@ fn main() -> Result<()> {
         things,
         path_of_repo: format!("{}/../", env::current_dir().unwrap().display().to_string()),
     };
+
+    // d2
+    if options.args.d2_graph {
+        generate_d2_graph(&PathBuf::from(&options.path_of_repo))?;
+        std::process::exit(0);
+    }
 
     let private_key_path = &get_private_key_path(&options);
     if !path_exists(private_key_path) {
