@@ -7,21 +7,31 @@ pub fn auto_build(impl_name: &TraitWrapper, options: &Options) {
     for deps in impl_name.deps() {
         info!("Checking dep: {} required by {:?}", deps, impl_name.name());
         let dep_impl: TraitWrapper = get_thing_by_name(&deps, &options.things);
-        let cur_dir = dir_current();
+        dir_change(&options.path_of_repo);
+        dir_change(MAIN_BUILD_DIR);
         mkdir_p(dep_impl.path());
         dir_change(&format!("{}{}", dep_impl.path(), dep_impl.name()));
-        if !dep_impl.is_built() {
-            info!("{} is not built, running auto build for it...", dep_impl.name());
-            auto_build(&dep_impl, options);
+        if !options.args.just_built_it {
+            if !dep_impl.is_built() {
+                info!(
+                    "{} is not built, running auto build for it...",
+                    dep_impl.name()
+                );
+                auto_build(&dep_impl, options);
+            } else {
+                info!("{} is already built", dep_impl.name());
+            }
         } else {
-            info!("{} is already built", dep_impl.name());
+            info!("Just built it is on, so building: {}", dep_impl.name());
+            auto_build(&dep_impl, options);
         }
-        dir_change(&cur_dir);
     }
 
     // Build it
     info!("All deps checked for {:?}", impl_name);
     let cur_dir = dir_current();
+    dir_change(&options.path_of_repo);
+    dir_change(MAIN_BUILD_DIR);
     mkdir_p(impl_name.path());
     dir_change(&format!("{}{}", impl_name.path(), impl_name.name()));
 

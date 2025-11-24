@@ -1,4 +1,4 @@
-use std::{env, fs::remove_dir_all, path::Path};
+use std::{env::{self, current_dir}, fs::remove_dir_all, path::Path};
 
 use crate::prelude::*;
 
@@ -45,7 +45,7 @@ pub fn path_exists(path: &str) -> bool {
 }
 
 pub fn dir_change(path: &str) {
-    env::set_current_dir(path).expect(&format!("Failed to change directory to: {}", path))
+    env::set_current_dir(path).expect(&format!("Failed to change directory to: {}, current path is: {}", path, current_dir().unwrap().to_string_lossy()))
 }
 
 pub fn mkdir_p(path: &str) {
