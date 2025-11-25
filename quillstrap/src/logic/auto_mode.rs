@@ -39,6 +39,12 @@ pub fn auto_build(impl_name: &TraitWrapper, options: &Options) {
         .build(&options)
         .expect(&format!("Failed to build for {:?}", impl_name));
 
+    if impl_name.is_built() {
+        info!("After built check passed");
+    } else {
+        panic!("Additional is built check after build failed");
+    }
+
     dir_change(&cur_dir);
 }
 
