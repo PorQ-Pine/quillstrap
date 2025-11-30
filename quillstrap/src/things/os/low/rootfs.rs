@@ -112,6 +112,8 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "gstreamer1-plugins-bad-free",
     "gstreamer1-plugins-bad-free-extras",
     "gstreamer1-libav",
+    // Remote display, best solution that I have found
+    "tigervnc", // for vncviewer command
     // Virtual keyboard
     "squeekboard",
     // Fix for Qt stuff
@@ -121,7 +123,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "gsettings-desktop-schemas",
     // Pavucontrol fix
     "libglvnd-gles",
-    // Remove once login from qinit works
+    // Remove once login from qinit works, or maybe not, leave it for dev things
     "tuigreet",
     // Eww tools
     "pamixer",

@@ -73,7 +73,16 @@ impl SetupThing for EwwNiriToolbar {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        todo!();
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("killall -9 eww eww-niri-taskbar", port, _options);
+        ssh_execute("rm -rf /usr/bin/eww-niri-taskbar", port, _options);
+        ssh_send(
+            "target/aarch64-unknown-linux-gnu/release/eww-niri-taskbar",
+            "/usr/bin/eww-niri-taskbar",
+            port,
+            _options,
+        );
+        Ok(())
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
