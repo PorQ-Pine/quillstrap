@@ -73,7 +73,18 @@ impl SetupThing for Niri {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        todo!();
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("systemctl stop qoms", port, _options);
+        ssh_execute("systemctl stop greetd", port, _options);
+        ssh_execute("killall -9 niri", port, _options);
+        ssh_execute("rm -rf /usr/bin/niri", port, _options);
+        ssh_send(
+            "target/aarch64-unknown-linux-gnu/release/niri",
+            "/usr/bin/niri",
+            port,
+            _options,
+        );
+        Ok(())
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {

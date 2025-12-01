@@ -313,7 +313,9 @@ impl SetupThing for Rootfs {
         Rootfs::disable_service(RD, "systemd-networkd-wait-online");
         Rootfs::disable_service(RD, "systemd-time-wait-sync");
         Rootfs::disable_service(RD, "serial-getty@");
-        Rootfs::disable_service(RD, "getty@tty1");
+        // Rootfs::disable_service(RD, "getty@tty1");
+        // Don't mask
+        Rootfs::execute(RD, &format!("systemctl disable getty@tty1"), false);
 
         // Zsh
         {
@@ -419,9 +421,11 @@ impl SetupThing for Rootfs {
         {
             // Greetd
             // For tty to not appear with greetd, while running niri - probably not needed anymore
+            /*
             for i in 1..8 {
                 Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
             }
+            */
             /*
             // Doesn't work :(
             let upower_service_file = &format!("{}usr/lib/systemd/system/greetd.service", RD);
