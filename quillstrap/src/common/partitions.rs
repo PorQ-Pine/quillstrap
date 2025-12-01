@@ -289,3 +289,17 @@ pub fn create_partition(after_label: &str, size_mb: usize, new_label: &str) {
     run_command(&format!("partprobe {}", disk), true).unwrap();
     sleep_millis(500);
 }
+
+// Output MB
+// Partition is the name of the partition in /dev/, so for example sda1
+pub fn get_partition_usage(partition: &str) -> u32 {
+    let output = Command::new("df")
+        .arg("-m")
+        .arg(format!("/dev/{}", partition))
+        .output()
+        .unwrap();
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let line = stdout.lines().nth(1).unwrap();
+    line.split_whitespace().nth(2).unwrap().parse().unwrap()
+}

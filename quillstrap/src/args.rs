@@ -63,11 +63,11 @@ pub struct Args {
     pub d2_graph: bool,
 
         #[arg(
-        long,
+        short, long,
         help = "Ignore checks if something is built, just built it (auto mode)",
         default_value_t = false, help_heading = GENERAL_OPTIONS
     )]
-    pub just_built_it: bool,
+    pub ignore_built_checks: bool,
 
     #[command(flatten)]
     pub quill_init_options: QuillInitOptions,

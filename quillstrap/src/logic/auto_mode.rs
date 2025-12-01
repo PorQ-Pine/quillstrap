@@ -11,7 +11,7 @@ pub fn auto_build(impl_name: &TraitWrapper, options: &Options, already_built: &m
         dir_change(MAIN_BUILD_DIR);
         mkdir_p(dep_impl.path());
         dir_change(&format!("{}{}", dep_impl.path(), dep_impl.name()));
-        if !options.args.just_built_it {
+        if !options.args.ignore_built_checks {
             if !dep_impl.is_built() {
                 info!(
                     "{} is not built, running auto build for it...",
