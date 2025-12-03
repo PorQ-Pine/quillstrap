@@ -138,6 +138,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pavucontrol",
     "rg",
     "jq",
+    "gammastep", // For tresholding level
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
