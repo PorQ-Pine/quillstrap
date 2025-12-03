@@ -731,6 +731,7 @@ passwd szybet
 
 (Now we need to copy skel there)
 gocryptfs /home/.szybet /home/szybet
+# This will remove your configurations!
 rm -rf /home/szybet/.*
 cp -r /etc/skel/.* /home/szybet/
 sudo chown -R szybet:szybet /home/szybet # Important permissions
