@@ -106,6 +106,10 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pipewire",
     "pulseaudio-utils",
     "rhythmbox", // If someone has a better default music app, let me know ;p
+    // File manager
+    "krusader",
+    // Text editor
+    "kate",
     // Audio codecs
     "gstreamer1-plugins-base",
     "gstreamer1-plugins-good",
@@ -727,7 +731,6 @@ passwd szybet
 (Now we need to copy skel there)
 gocryptfs /home/.szybet /home/szybet
 rm -rf /home/szybet/.*
-cp -r /etc/skel/\* /home/szybet/ # Remove the \ here
 cp -r /etc/skel/.* /home/szybet/
 sudo chown -R szybet:szybet /home/szybet # Important permissions
 umount /home/szybet
