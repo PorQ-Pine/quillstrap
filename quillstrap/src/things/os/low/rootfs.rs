@@ -748,4 +748,13 @@ export NIRI_SOCKET=/run/user/1000/niri.wayland-X.sock
 export WAYLAND_DISPLAY=/run/user/1000/wayland-1
 export XDG_RUNTIME_DIR="/run/user/$UID"
 export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+
+To restart niri:
+systemctl stop qoms
+systemctl stop greetd
+killall -9 niri
+rm -rf /run/greetd-*.sock
+systemctl start greetd
+export GREETD_SOCK=/run/greetd-X.sock
+tuigreetd
 */
