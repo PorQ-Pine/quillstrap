@@ -66,6 +66,7 @@ impl SetupThing for Kernel {
     }
 
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
+        remove_dir_all("out").ok();
         remove_dir_all("../initrd/initrd_base/lib/").ok();
 
         copy_file(
