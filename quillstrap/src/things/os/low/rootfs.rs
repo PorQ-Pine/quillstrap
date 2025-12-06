@@ -45,6 +45,7 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "libdbusmenu",
     "libdbusmenu-gtk3",
     "gtk-layer-shell",
+    "libbsd",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -200,6 +201,7 @@ impl SetupThing for Rootfs {
             "niri",
             "pinenote_service",
             "qoms",
+            "squeekboard",
         ]
     }
 
@@ -423,131 +425,133 @@ impl SetupThing for Rootfs {
         }
 
         // GUI packages modifications
-        {
-            // Greetd
-            // For tty to not appear with greetd, while running niri - probably not needed anymore
-            /*
-            for i in 1..8 {
-                Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
-            }
-            */
-            /*
-            // Doesn't work :(
-            let upower_service_file = &format!("{}usr/lib/systemd/system/greetd.service", RD);
-            let file = read_file_str(upower_service_file.to_string()).unwrap();
-            if !file.contains("# After=getty@tty1.service") {
-                replace_string_file(
-                    upower_service_file,
-                    "After=getty@tty1.service",
-                    "# After=getty@tty1.service",
-                );
-            }
-            if !file.contains("# Conflicts=getty@tty1.service") {
-                replace_string_file(
-                    upower_service_file,
-                    "Conflicts=getty@tty1.service",
-                    "# Conflicts=getty@tty1.service",
-                );
-            }
-            */
-
-            // Maybe not needed
-            Rootfs::execute(
-                RD,
-                "usermod -aG video greetd",
-                _options.config.command_output,
-            );
-            Rootfs::execute(
-                RD,
-                "usermod -aG render greetd",
-                _options.config.command_output,
-            );
-
-            // Copy modified binary
-            copy_file("../greetd/out/greetd", &format!("{}usr/bin/greetd", RD)).unwrap();
-
-            // TODO: add greetd to excludes now
-
-            // Eww
-            // We need git
-            /*
-            Rootfs::execute(
-                RD,
-                "dnf copr enable varlad/eww -y",
-                _options.config.command_output,
-            );
-            Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
-            */
-            copy_file(
-                "../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww",
-                &format!("{}usr/bin/eww", RD),
-            )
-            .unwrap();
-            // Eww niri toolbar
-            copy_file("../../gui/eww_niri_toolbar/target/aarch64-unknown-linux-gnu/release/eww-niri-taskbar", &format!("{}usr/bin/eww-niri-taskbar", RD)).unwrap();
-            // Eww data provider
-            copy_file("../../gui/eww_data_provider/eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider", &format!("{}usr/bin/eww-data-provider", RD)).unwrap();
-            copy_file("../../gui/eww_data_provider/eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", &format!("{}usr/bin/eww-data-requester", RD)).unwrap();
-
-            // Initial rotation, idk if it's the best way
-            // Set in rootfs_config, here we only apply, idk if its needed anyway
-            Rootfs::execute(RD, "systemd-hwdb update", _options.config.command_output);
-
-            // Nerd fonts for eww
-            Rootfs::execute(
-                RD,
-                "dnf copr enable che/nerd-fonts -y",
-                _options.config.command_output,
-            );
-            Rootfs::execute(
-                RD,
-                "dnf install nerd-fonts -y",
-                _options.config.command_output,
-            );
-
-            // Rnote - welp, doesn't launch
-            /*
-            Rootfs::execute(
-                RD,
-                "dnf copr enable fotnite-vevo/rnote fedora-41-aarch64 -y",
-                _options.config.command_output,
-            );
-            Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
-            */
-
-            // Anki
-            // TODO: In config, based on enums choose what to install
-            Rootfs::execute(
-                RD,
-                "dnf copr enable hazel-bunny/anki -y",
-                _options.config.command_output,
-            );
-            Rootfs::execute(
-                RD,
-                "dnf install anki-bin -y",
-                _options.config.command_output,
-            );
-
-            // Niri
-            copy_file(
-                "../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri",
-                &format!("{}usr/bin/niri", RD),
-            )
-            .unwrap();
-            // TODO: Add niri to excludes
-
-            // Koreader
-            copy_file(
-                "../../gui/koreader/koreader.AppImage",
-                &format!("{}usr/bin/koreader.AppImage", RD),
-            )
-            .unwrap();
-            copy_file(
-                "../../gui/koreader/koreader.desktop",
-                &format!("{}usr/share/applications/koreader.desktop", RD),
-            )
-            .unwrap();
+        // Greetd
+        // For tty to not appear with greetd, while running niri - probably not needed anymore
+        /*
+        for i in 1..8 {
+            Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
         }
+        */
+        /*
+        // Doesn't work :(
+        let upower_service_file = &format!("{}usr/lib/systemd/system/greetd.service", RD);
+        let file = read_file_str(upower_service_file.to_string()).unwrap();
+        if !file.contains("# After=getty@tty1.service") {
+            replace_string_file(
+                upower_service_file,
+                "After=getty@tty1.service",
+                "# After=getty@tty1.service",
+            );
+        }
+        if !file.contains("# Conflicts=getty@tty1.service") {
+            replace_string_file(
+                upower_service_file,
+                "Conflicts=getty@tty1.service",
+                "# Conflicts=getty@tty1.service",
+            );
+        }
+        */
+
+        // Maybe not needed
+        Rootfs::execute(
+            RD,
+            "usermod -aG video greetd",
+            _options.config.command_output,
+        );
+        Rootfs::execute(
+            RD,
+            "usermod -aG render greetd",
+            _options.config.command_output,
+        );
+
+        // Copy modified binary
+        copy_file("../greetd/out/greetd", &format!("{}usr/bin/greetd", RD)).unwrap();
+
+        // TODO: add greetd to excludes now
+
+        // Eww
+        // We need git
+        /*
+        Rootfs::execute(
+            RD,
+            "dnf copr enable varlad/eww -y",
+            _options.config.command_output,
+        );
+        Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
+        */
+        copy_file(
+            "../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww",
+            &format!("{}usr/bin/eww", RD),
+        )
+        .unwrap();
+        // Eww niri toolbar
+        copy_file(
+            "../../gui/eww_niri_toolbar/target/aarch64-unknown-linux-gnu/release/eww-niri-taskbar",
+            &format!("{}usr/bin/eww-niri-taskbar", RD),
+        )
+        .unwrap();
+        // Eww data provider
+        copy_file("../../gui/eww_data_provider/eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider", &format!("{}usr/bin/eww-data-provider", RD)).unwrap();
+        copy_file("../../gui/eww_data_provider/eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", &format!("{}usr/bin/eww-data-requester", RD)).unwrap();
+
+        // Initial rotation, idk if it's the best way
+        // Set in rootfs_config, here we only apply, idk if its needed anyway
+        Rootfs::execute(RD, "systemd-hwdb update", _options.config.command_output);
+
+        // Nerd fonts for eww
+        Rootfs::execute(
+            RD,
+            "dnf copr enable che/nerd-fonts -y",
+            _options.config.command_output,
+        );
+        Rootfs::execute(
+            RD,
+            "dnf install nerd-fonts -y",
+            _options.config.command_output,
+        );
+
+        // Rnote - welp, doesn't launch
+        /*
+        Rootfs::execute(
+            RD,
+            "dnf copr enable fotnite-vevo/rnote fedora-41-aarch64 -y",
+            _options.config.command_output,
+        );
+        Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
+        */
+
+        // Anki
+        // TODO: In config, based on enums choose what to install
+        Rootfs::execute(
+            RD,
+            "dnf copr enable hazel-bunny/anki -y",
+            _options.config.command_output,
+        );
+        Rootfs::execute(
+            RD,
+            "dnf install anki-bin -y",
+            _options.config.command_output,
+        );
+
+        // Niri
+        copy_file(
+            "../../gui/niri/target/aarch64-unknown-linux-gnu/release/niri",
+            &format!("{}usr/bin/niri", RD),
+        )
+        .unwrap();
+        // TODO: Add niri to excludes
+
+        // Koreader
+        copy_file(
+            "../../gui/koreader/koreader.AppImage",
+            &format!("{}usr/bin/koreader.AppImage", RD),
+        )
+        .unwrap();
+        copy_file(
+            "../../gui/koreader/koreader.desktop",
+            &format!("{}usr/share/applications/koreader.desktop", RD),
+        )
+        .unwrap();
 
         // Qoms
         let qoms_dir = &format!("{}opt/qoms/", RD);
@@ -599,6 +603,13 @@ impl SetupThing for Rootfs {
             "systemctl --global enable pinenote",
             _options.config.command_output,
         );
+
+        // Squeekboard
+        copy_file(
+            "../../gui/squeekboard/builddir/src/squeekboard",
+            &format!("{}usr/bin/squeekboard", RD),
+        )
+        .unwrap();
 
         // Networking
         Rootfs::execute(

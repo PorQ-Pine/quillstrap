@@ -23,6 +23,19 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "libdbusmenu-devel",
     "libdbusmenu-gtk3-devel",
     "gtk-layer-shell-devel",
+    // Squeekboard
+    "meson",
+    "rust",
+    "cargo",
+    "ninja",
+    "wayland-protocols-devel",
+    "rust-wayland-scanner+default-devel",
+    "rust-wayland-scanner-devel",
+    "wayland-devel",
+    "cmake",
+    "gnome-desktop3-devel",
+    "libbsd-devel",
+    "feedbackd-devel",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]

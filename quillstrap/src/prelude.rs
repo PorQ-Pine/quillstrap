@@ -42,6 +42,7 @@ pub use crate::os::low::greetd::*;
 pub use std::io::Write;
 pub use crate::os::gui::slint_gallery::*;
 pub use crate::os::gui::eww_config::*;
+pub use crate::os::gui::squeekboard::*;
 pub use crate::things::os::gui::niri::*;
 pub use crate::things::common::libquillcom::*;
 pub use crate::things::tests::anvil::*;
