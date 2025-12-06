@@ -767,5 +767,5 @@ killall -9 niri
 rm -rf /run/greetd-*.sock
 systemctl start greetd
 export GREETD_SOCK=/run/greetd-X.sock
-tuigreetd
+tuigreet
 */

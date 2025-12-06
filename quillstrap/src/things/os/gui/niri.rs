@@ -47,9 +47,10 @@ impl SetupThing for Niri {
             "PKG_CONFIG_SYSROOT_DIR",
             &format!("{}../../low/rootfs_sysroot/sysroot", full_path),
         );
+        // Optimisation here
         set_var(
             "RUSTFLAGS",
-            &format!("-L {}../../low/rootfs_sysroot/sysroot/usr/lib64", full_path),
+            &format!("-L {}../../low/rootfs_sysroot/sysroot/usr/lib64 -C target-cpu=cortex-a55", full_path),
         );
         set_var(
             "PKG_CONFIG_LIBDIR",
