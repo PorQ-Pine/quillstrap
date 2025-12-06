@@ -130,6 +130,8 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "libglvnd-gles",
     // Remove once login from qinit works, or maybe not, leave it for dev things
     "tuigreet",
+    // AAA
+    "wget",
     // Eww tools
     "pamixer",
     "dunst",
