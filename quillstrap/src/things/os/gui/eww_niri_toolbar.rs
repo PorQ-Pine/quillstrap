@@ -66,8 +66,10 @@ impl SetupThing for EwwNiriToolbar {
         .unwrap();
 
         set_var("PKG_CONFIG_ALLOW_CROSS", "");
+        set_var("PKG_CONFIG_PATH", "");
         set_var("PKG_CONFIG_SYSROOT_DIR", "");
         set_var("RUSTFLAGS", "");
+        set_var("PKG_CONFIG_LIBDIR", "");
 
         Ok(())
     }

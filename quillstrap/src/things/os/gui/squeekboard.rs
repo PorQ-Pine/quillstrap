@@ -13,7 +13,7 @@ impl SetupThing for Squeekboard {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec![]
+        vec!["rootfs_sysroot"]
     }
 
     fn git(&self) -> &'static str {
@@ -102,8 +102,10 @@ impl SetupThing for Squeekboard {
 
         /*
         set_var("PKG_CONFIG_ALLOW_CROSS", "");
+        set_var("PKG_CONFIG_PATH", "");
         set_var("PKG_CONFIG_SYSROOT_DIR", "");
         set_var("RUSTFLAGS", "");
+        set_var("PKG_CONFIG_LIBDIR", "");
         */
         Ok(())
     }
