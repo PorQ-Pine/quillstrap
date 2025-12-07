@@ -98,7 +98,6 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "blueman",
     "dejavu-fonts-all",
     "nwg-drawer",
-    "xournalpp",
     "firefox",
     "network-manager-applet",
     "swaybg",
@@ -132,6 +131,11 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "tuigreet",
     // AAA
     "wget",
+    // Xournalpp
+    "poppler-glib",
+    "libzip",
+    "portaudio",
+    "qpdf-libs",
     // Eww tools
     "pamixer",
     "dunst",
@@ -204,6 +208,7 @@ impl SetupThing for Rootfs {
             "pinenote_service",
             "qoms",
             "squeekboard",
+            "xournalpp",
         ]
     }
 
@@ -612,6 +617,9 @@ impl SetupThing for Rootfs {
             &format!("{}usr/bin/squeekboard", RD),
         )
         .unwrap();
+
+        // Xournalpp
+        copy_dir_content("../../gui/xournalpp/build/install/", &format!("{}usr/", RD));
 
         // Networking
         Rootfs::execute(

@@ -40,6 +40,7 @@ pub enum TraitWrapper {
     TwAnvil(Anvil),
     TwPinenoteService(PinenoteService),
     TwSqueekboard(Squeekboard),
+    TwXournalpp(Xournalpp),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -78,6 +79,7 @@ macro_rules! forward {
             TraitWrapper::TwEwwDataProvider(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwPinenoteService(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwSqueekboard(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwXournalpp(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -157,7 +159,8 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwEwwDataProvider(Default::default()),
         TwAnvil(Default::default()),
         TwPinenoteService(Default::default()),
-        TwSqueekboard(Default::default())
+        TwSqueekboard(Default::default()),
+        TwXournalpp(Default::default()),
     ]
 }
 
