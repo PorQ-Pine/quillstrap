@@ -95,6 +95,15 @@ impl SetupThing for Xournalpp {
             );
         }
 
+        // For older xournalpp
+        if !file_content.contains("Exec=env GDK_BACKEND=x11 GDK_SCALE=2 xournalpp %f") {
+            replace_string_file(
+                file_path,
+                "Exec=xournalpp %f",
+                "Exec=env GDK_BACKEND=x11 GDK_SCALE=2 xournalpp %f",
+            );
+        }
+
         run_command(
             &format!("umount {}", quillstrap_mount),
             _options.config.command_output,
