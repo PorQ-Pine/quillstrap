@@ -26,6 +26,7 @@ impl SetupThing for Xournalpp {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        remove_dir_all("build").ok();
         Ok(())
     }
 
@@ -60,11 +61,7 @@ impl SetupThing for Xournalpp {
             _options.config.command_output,
         );
 
-        // remove_dir_all("build").ok();
-        // remove_dir_all("install").ok();
-
         mkdir_p("build");
-        mkdir_p("install");
 
         Rootfs::execute(
             &sysroot_path,
