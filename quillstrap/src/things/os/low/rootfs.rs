@@ -136,6 +136,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "libzip",
     "portaudio",
     "qpdf-libs",
+    "lua",
     // Eww tools
     "pamixer",
     "dunst",
@@ -145,7 +146,7 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pavucontrol",
     "rg",
     "jq",
-    "gammastep", // For tresholding level
+    "gammastep", // For tresholding level, doesn't work
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
