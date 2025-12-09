@@ -1,11 +1,11 @@
 use crate::prelude::*;
 
 #[derive(Clone, Copy, Default, Debug)]
-pub struct Niri;
+pub struct Xwaylandsatellite;
 
-impl SetupThing for Niri {
+impl SetupThing for Xwaylandsatellite {
     fn name(&self) -> &'static str {
-        "niri"
+        "xwayland_satellite"
     }
 
     fn path(&self) -> &'static str {
@@ -17,7 +17,7 @@ impl SetupThing for Niri {
     }
 
     fn git(&self) -> &'static str {
-        "niri"
+        "xwayland-satellite"
     }
 
     fn get(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
@@ -26,7 +26,7 @@ impl SetupThing for Niri {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("target/aarch64-unknown-linux-gnu/release/niri")
+        path_exists("target/aarch64-unknown-linux-gnu/release/xwayland-satellite")
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
@@ -79,18 +79,7 @@ impl SetupThing for Niri {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        let port = _options.config.rootfs_options.deploy_ssh_port;
-        ssh_execute("systemctl stop qoms", port, _options);
-        ssh_execute("systemctl stop greetd", port, _options);
-        ssh_execute("killall -9 niri", port, _options);
-        ssh_execute("rm -rf /usr/bin/niri", port, _options);
-        ssh_send(
-            "target/aarch64-unknown-linux-gnu/release/niri",
-            "/usr/bin/niri",
-            port,
-            _options,
-        );
-        Ok(())
+        todo!()
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {

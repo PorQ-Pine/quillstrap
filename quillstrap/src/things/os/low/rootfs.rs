@@ -46,6 +46,7 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "libdbusmenu-gtk3",
     "gtk-layer-shell",
     "libbsd",
+    "xcb-util-cursor",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -210,6 +211,7 @@ impl SetupThing for Rootfs {
             "qoms",
             "squeekboard",
             "xournalpp",
+            "xwayland-satellite",
         ]
     }
 
@@ -548,6 +550,13 @@ impl SetupThing for Rootfs {
         )
         .unwrap();
         // TODO: Add niri to excludes
+
+        // Xwayland-satellite (part of niri package in fedora)
+        copy_file(
+            "../../gui/xwayland_satellite/target/aarch64-unknown-linux-gnu/release/xwayland-satellite",
+            &format!("{}usr/bin/xwayland-satellite", RD),
+        )
+        .unwrap();
 
         // Koreader
         copy_file(

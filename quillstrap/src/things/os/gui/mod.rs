@@ -7,3 +7,4 @@ pub mod koreader;
 pub mod eww_data_provider;
 pub mod squeekboard;
 pub mod xournalpp;
+pub mod xwayland_satellite;

@@ -36,6 +36,7 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "gnome-desktop3-devel",
     "libbsd-devel",
     "feedbackd-devel",
+    "xcb-util-cursor-devel",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
