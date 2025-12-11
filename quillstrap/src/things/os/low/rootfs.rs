@@ -138,6 +138,9 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "portaudio",
     "qpdf-libs",
     "lua",
+    // Xournalpp hacky fix
+    "xdpyinfo",
+    "openbox",
     // Eww tools
     "pamixer",
     "dunst",

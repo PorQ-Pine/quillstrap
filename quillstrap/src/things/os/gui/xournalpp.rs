@@ -1,5 +1,25 @@
 use crate::prelude::*;
 
+const SCRIPT: &str = r#"#!/usr/bin/env bash
+
+for d in {0..99}; do
+    if ! xdpyinfo -display ":$d" >/dev/null 2>&1; then
+        DISPLAY=":$d"
+        break
+    fi
+done
+
+Xwayland -nocursor -wr "$DISPLAY" &
+XW_PID=$!
+sleep 1
+DISPLAY="$DISPLAY" openbox &
+OB_PID=$!
+sleep 1
+DISPLAY="$DISPLAY" GDK_BACKEND=x11 xournalpp
+
+kill "$OB_PID"
+kill "$XW_PID""#;
+
 #[derive(Clone, Copy, Default, Debug)]
 pub struct Xournalpp;
 
@@ -85,19 +105,33 @@ impl SetupThing for Xournalpp {
         let file_path = "build/install/share/applications/com.github.xournalpp.xournalpp.desktop";
         let file_content = read_file_str(file_path.to_string()).unwrap();
         if !file_content.contains("Exec=env GDK_BACKEND=x11 GDK_SCALE=2 xournalpp-wrapper %f") {
+            /*
             replace_string_file(
                 file_path,
                 "Exec=xournalpp-wrapper %f",
                 "Exec=env GDK_BACKEND=x11 GDK_SCALE=2 xournalpp-wrapper %f",
             );
+            */
+            replace_string_file(
+                file_path,
+                "Exec=xournalpp-wrapper %f",
+                "Exec=xournalpp_hacky_fix.sh",
+            );
         }
 
         // For older xournalpp
         if !file_content.contains("Exec=env GDK_BACKEND=x11 GDK_SCALE=2 xournalpp %f") {
+            /*
             replace_string_file(
                 file_path,
                 "Exec=xournalpp %f",
                 "Exec=env GDK_BACKEND=x11 GDK_SCALE=2 xournalpp %f",
+            );
+            */
+            replace_string_file(
+                file_path,
+                "Exec=xournalpp %f",
+                "Exec=xournalpp_hacky_fix.sh",
             );
         }
 
@@ -106,6 +140,11 @@ impl SetupThing for Xournalpp {
             _options.config.command_output,
         )
         .unwrap();
+
+        // Hacky fix
+        let path = Path::new("build/install/bin/xournalpp_hacky_fix.sh");
+        std::fs::write(path, SCRIPT).unwrap();
+        run_command(&format!("chmod +x {}", path.to_string_lossy()), _options.config.command_output).unwrap();
 
         Ok(())
     }

@@ -79,7 +79,15 @@ impl SetupThing for Xwaylandsatellite {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        todo!()
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("rm -rf /usr/bin/xwayland-satellite", port, _options);
+        ssh_send(
+            "target/aarch64-unknown-linux-gnu/release/xwayland-satellite",
+            "/usr/bin/xwayland-satellite",
+            port,
+            _options,
+        );
+        Ok(())
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
