@@ -211,7 +211,7 @@ impl SetupThing for Rootfs {
             "qoms",
             "squeekboard",
             "xournalpp",
-            "xwayland-satellite",
+            "xwayland_satellite",
         ]
     }
 
