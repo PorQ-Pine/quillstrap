@@ -735,6 +735,8 @@ impl SetupThing for Rootfs {
 Command snippets for early rootfs
 
 connect to wifi:
+nmcli radio wifi on
+nmcli device wifi rescan
 nmcli device wifi list
 nmcli device wifi connect "hotspot" password "12345678"
 If it refuses to connect for GUI reasons:
