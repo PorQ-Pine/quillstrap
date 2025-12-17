@@ -1,5 +1,8 @@
 use crate::prelude::*;
 
+const QUILL_BOOT_MOUNT_PATH: &str = "/mnt/quill_boot/";
+const QINIT_BINARIES_DIR: &str = "qinit_binaries/";
+
 #[derive(Clone, Copy, Default, Debug)]
 pub struct BootPartition;
 
@@ -44,31 +47,40 @@ impl SetupThing for BootPartition {
         let _disk = choose_disk();
 
         let partition = get_partition("quill_boot");
-        mkdir_p("/mnt/quill_boot");
+        let qinit_binaries_dir_path = &format!("{}{}", &QUILL_BOOT_MOUNT_PATH, &QINIT_BINARIES_DIR);
+        let procedural_wallpapers_binary_final_path = &format!("{}{}", &qinit_binaries_dir_path, &PROCEDURAL_WALLPAPERS_BINARY);
+
+        mkdir_p(&QUILL_BOOT_MOUNT_PATH);
+
         run_command(
-            &format!("mount {} /mnt/quill_boot", partition),
+            &format!("mount {} {}", partition, QUILL_BOOT_MOUNT_PATH),
             _options.config.command_output,
         )
         .unwrap();
         run_command("sync", false).unwrap();
-        copy_file("../kernel/out/Image.gz", "/mnt/quill_boot/Image.gz").unwrap();
-        copy_file("../kernel/out/DTB", "/mnt/quill_boot/DTB").unwrap();
+
+        mkdir_p(&qinit_binaries_dir_path);
+        copy_file(&format!("../procedural_wallpapers/out/{}", &PROCEDURAL_WALLPAPERS_BINARY), &procedural_wallpapers_binary_final_path).unwrap();
+        sign(&procedural_wallpapers_binary_final_path, &format!("{}.dgst" &procedural_wallpapers_binary_final_path), _options);
+
+        copy_file("../kernel/out/Image.gz", &format!("{}Image.gz", &QUILL_BOOT_MOUNT_PATH)).unwrap();
+        copy_file("../kernel/out/DTB", &format!("{}DTB", &QUILL_BOOT_MOUNT_PATH)).unwrap();
 
         copy_file(
             "../firmware/out/wifi_bt/firmware.squashfs",
-            "/mnt/quill_boot/firmware.squashfs",
+            &format!("{}firmware.squashfs", &QUILL_BOOT_MOUNT_PATH),
         )
         .unwrap();
         sign(
-            "/mnt/quill_boot/firmware.squashfs",
-            "/mnt/quill_boot/firmware.squashfs.dgst",
+            &format!("{}firmware.squashfs", &QUILL_BOOT_MOUNT_PATH),
+            &format!("{}firmware.squashfs.dgst", &QUILL_BOOT_MOUNT_PATH),
             _options,
         );
 
-        mkdir_p("/mnt/quill_boot/waveform");
+        mkdir_p(&format!("{}waveform", &QUILL_BOOT_MOUNT_PATH));
         copy_file(
             "../eink_kernel_magic/custom_wf.bin",
-            "/mnt/quill_boot/waveform/custom_wf.bin",
+            &format!("{}waveform/custom_wf.bin", &QUILL_BOOT_MOUNT_PATH),
         )
         .unwrap();
 
