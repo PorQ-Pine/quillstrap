@@ -8,3 +8,4 @@ pub mod partition_setup;
 pub mod boot_partition;
 pub mod firmware;
 pub mod eink_kernel_magic;
+pub mod procedural_wallpapers;
