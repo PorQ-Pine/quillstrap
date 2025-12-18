@@ -1,7 +1,7 @@
 use crate::prelude::*;
 
 const QUILL_BOOT_MOUNT_PATH: &str = "/mnt/quill_boot/";
-const QINIT_BINARIES_FILE: &str = "qinit_binaries.sqsh";
+const QINIT_BINARIES_FILE: &str = "qinit_binaries.squashfs";
 const TMP_PATH: &str = "/tmp/boot_partition_temp/";
 
 #[derive(Clone, Copy, Default, Debug)]
