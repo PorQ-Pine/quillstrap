@@ -1,7 +1,8 @@
 use crate::prelude::*;
 
 const QUILL_BOOT_MOUNT_PATH: &str = "/mnt/quill_boot/";
-const QINIT_BINARIES_DIR: &str = "qinit_binaries/";
+const QINIT_BINARIES_FILE: &str = "qinit_binaries.sqsh";
+const TMP_PATH: &str = "/tmp/boot_partition_temp/";
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct BootPartition;
@@ -47,8 +48,7 @@ impl SetupThing for BootPartition {
         let _disk = choose_disk();
 
         let partition = get_partition("quill_boot");
-        let qinit_binaries_dir_path = &format!("{}{}", &QUILL_BOOT_MOUNT_PATH, &QINIT_BINARIES_DIR);
-        let procedural_wallpapers_binary_final_path = &format!("{}{}", &qinit_binaries_dir_path, &PROCEDURAL_WALLPAPERS_BINARY);
+        let qinit_binaries_squashfs_path = format!("{}{}", &QUILL_BOOT_MOUNT_PATH, &QINIT_BINARIES_FILE);
 
         mkdir_p(&QUILL_BOOT_MOUNT_PATH);
 
@@ -59,9 +59,28 @@ impl SetupThing for BootPartition {
         .unwrap();
         run_command("sync", false).unwrap();
 
-        mkdir_p(&qinit_binaries_dir_path);
-        copy_file(&format!("../procedural_wallpapers/out/{}", &PROCEDURAL_WALLPAPERS_BINARY), &procedural_wallpapers_binary_final_path).unwrap();
-        sign(&procedural_wallpapers_binary_final_path, &format!("{}.dgst" &procedural_wallpapers_binary_final_path), _options);
+        if std::fs::exists(&TMP_PATH).unwrap() {
+            std::fs::remove_dir_all(&TMP_PATH).unwrap();
+        }
+        mkdir_p(&TMP_PATH);
+        copy_file(&format!("../procedural_wallpapers/out/{}", &PROCEDURAL_WALLPAPERS_BINARY), &format!("{}procedural_wallpapers", &TMP_PATH)).unwrap();
+        let mksquashfs_cmd = if _options.config.compression_enabled {
+            format!(
+                // TODO: mksquashfs options should go into a single variable somewhere, not be duplicated like that (from rootfs.rs) here
+                "mksquashfs {} {} -b 32768 -comp zstd -Xcompression-level 22 -no-xattrs",
+                &TMP_PATH, &qinit_binaries_squashfs_path
+            )
+        } else {
+            format!(
+                "mksquashfs {} {} -no-compression -no-xattrs",
+                &TMP_PATH, &qinit_binaries_squashfs_path
+            )
+        };
+        if std::fs::exists(&qinit_binaries_squashfs_path).unwrap() {
+            std::fs::remove_file(&qinit_binaries_squashfs_path).unwrap();
+        }
+        run_command(&mksquashfs_cmd, true).unwrap();
+        sign(&qinit_binaries_squashfs_path, &format!("{}.dgst", &qinit_binaries_squashfs_path), _options);
 
         copy_file("../kernel/out/Image.gz", &format!("{}Image.gz", &QUILL_BOOT_MOUNT_PATH)).unwrap();
         copy_file("../kernel/out/DTB", &format!("{}DTB", &QUILL_BOOT_MOUNT_PATH)).unwrap();
