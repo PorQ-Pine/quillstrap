@@ -18,7 +18,7 @@ impl SetupThing for BootPartition {
 
     fn deps(&self) -> Vec<&'static str> {
         // It needs them to deploy, but makes sense to keep them here
-        vec!["kernel", "eink_kernel_magic", "firmware"]
+        vec!["kernel", "eink_kernel_magic", "firmware", "procedural_wallpapers"]
     }
 
     fn git(&self) -> &'static str {
