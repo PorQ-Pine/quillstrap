@@ -106,6 +106,7 @@ impl SetupThing for Sysroot {
             "clang",
             "clang19-libclang",
             "clang19-dev",
+            "fontconfig-dev",
         ];
         AlpineChrootInstall::setup_alpine_chroot(
             _options,

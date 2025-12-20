@@ -45,13 +45,15 @@ impl SetupThing for QuillInit {
         dir_change(&QINIT_SRC_DIR);
 
         let mut features_normal: Vec<&str> = vec![];
-        let features_wrapper: Vec<&str> = vec!["init_wrapper"];
+        let mut features_wrapper: Vec<&str> = vec!["init_wrapper"];
 
         if _options.config.unrestricted {
             features_normal.push("free_roam");
         }
         if _options.config.unsecure_debug {
-            features_normal.push("debug");
+            let feature = "debug";
+            features_wrapper.push(feature);
+            features_normal.push(feature);
         }
 
         let full_path = get_path_of_thing_native(self, _options);
