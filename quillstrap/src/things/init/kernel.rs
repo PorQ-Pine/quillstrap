@@ -99,6 +99,21 @@ impl SetupThing for Kernel {
         )
         .unwrap();
 
+        let modules_dir_path = format!(
+            "{}../initrd/initrd_base/lib/modules",
+            &path_of_kernel_absolute
+        );
+        run_shell_command(
+            &format!(
+                "mksquashfs {} {}.squashfs -no-compression -no-xattrs",
+                &modules_dir_path, &modules_dir_path
+            ),
+            _options.config.command_output,
+        )
+        .unwrap();
+
+        std::fs::remove_dir_all(&modules_dir_path).unwrap();
+
         run_shell_command(
             &format!(
                 "make -j{} ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-",
