@@ -57,7 +57,6 @@ impl SetupThing for InitRD {
             "openssl",
             "fontconfig",
             "openrc",
-            "fuse-overlayfs",
             "xz",
             "iwd",
             "openresolv",
