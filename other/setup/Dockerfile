@@ -12,9 +12,12 @@ ENV PATH="${PATH}:/root/.cargo/bin"
 # VS Code stuff
 RUN apt-get install -y git libxkbcommon-dev libgbm-dev
 RUN git config --global --add safe.directory '*'
+RUN git config --global core.editor "nano"
+RUN git config --global pull.rebase false
 
 # quillstrap stuff
-RUN apt-get install -y openssl libssl-dev clang sshpass
+# No idea why but it crashed without update here.
+RUN apt-get update && apt-get install -y openssl libssl-dev clang sshpass
 
 # U-boot build
 RUN apt-get install -y coreutils device-tree-compiler python3 python3-pyelftools gcc-aarch64-linux-gnu
