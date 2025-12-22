@@ -43,6 +43,7 @@ pub enum TraitWrapper {
     TwXournalpp(Xournalpp),
     TwXwaylandSatellite(Xwaylandsatellite),
     TwProceduralWallpapers(ProceduralWallpapers),
+    TwCoreSettings(CoreSettings),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -84,6 +85,7 @@ macro_rules! forward {
             TraitWrapper::TwXournalpp(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwXwaylandSatellite(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwProceduralWallpapers(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwCoreSettings(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -167,6 +169,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwXournalpp(Default::default()),
         TwXwaylandSatellite(Default::default()),
         TwProceduralWallpapers(Default::default()),
+        TwCoreSettings(Default::default()),
     ]
 }
 

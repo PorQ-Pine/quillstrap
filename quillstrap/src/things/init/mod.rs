@@ -9,3 +9,4 @@ pub mod boot_partition;
 pub mod firmware;
 pub mod eink_kernel_magic;
 pub mod procedural_wallpapers;
+pub mod core_settings;

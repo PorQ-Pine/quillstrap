@@ -1,13 +1,13 @@
 use crate::prelude::*;
 
-pub const PROCEDURAL_WALLPAPERS_BINARY: &str = "procedural_wallpapers";
+pub const CORE_SETTINGS_BINARY: &str = "core_settings";
 
 #[derive(Clone, Copy, Default, Debug)]
-pub struct ProceduralWallpapers;
+pub struct CoreSettings;
 
-impl SetupThing for ProceduralWallpapers {
+impl SetupThing for CoreSettings {
     fn name(&self) -> &'static str {
-        "procedural_wallpapers"
+        "core_settings"
     }
 
     fn path(&self) -> &'static str {
@@ -19,7 +19,7 @@ impl SetupThing for ProceduralWallpapers {
     }
 
     fn git(&self) -> &'static str {
-        "procedural-wallpapers-rs"
+        "core-settings"
     }
 
     fn get(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
@@ -28,11 +28,11 @@ impl SetupThing for ProceduralWallpapers {
     }
 
     fn is_built(&self) -> bool {
-        path_exists(&format!("out/{}", &PROCEDURAL_WALLPAPERS_BINARY))
+        path_exists(&format!("out/{}", &CORE_SETTINGS_BINARY))
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
-        run_command("cargo clean", _options.config.command_output).expect("Failed to clean procedural-wallpapers");
+        run_command("cargo clean", _options.config.command_output).expect("Failed to clean core-settings");
         Ok(())
     }
 
@@ -44,22 +44,22 @@ impl SetupThing for ProceduralWallpapers {
         set_var("PKG_CONFIG_ALLOW_CROSS", "1");
         set_var(
             "PKG_CONFIG_PATH",
-            &format!("{}../sysroot/usr/lib/pkgconfig", full_path),
+            &format!("{}../sysroot/usr/lib/pkgconfig", &full_path),
         );
         set_var("PKG_CONFIG_ALLOW_CROSS", "1");
         set_var(
             "PKG_CONFIG_SYSROOT_DIR",
-            &format!("{}../sysroot", full_path),
+            &format!("{}../sysroot", &full_path),
         );
         set_var(
             "OPENSSL_INCLUDE_DIR",
-            &format!("{}../sysroot/usr/include/openssl", full_path),
+            &format!("{}../sysroot/usr/include/openssl", &full_path),
         );
         set_var(
             "RUSTFLAGS",
             &format!(
                 "-C target-feature=-crt-static -L {}../sysroot/usr/lib/",
-                full_path
+                &full_path
             ),
         );
 
@@ -72,9 +72,9 @@ impl SetupThing for ProceduralWallpapers {
         .unwrap();
         copy_file(
             &format!(
-                "{}target/aarch64-unknown-linux-musl/release/{}", &full_path, &PROCEDURAL_WALLPAPERS_BINARY
+                "{}target/aarch64-unknown-linux-musl/release/{}", &full_path, &CORE_SETTINGS_BINARY
             ),
-            &format!("out/{}", &PROCEDURAL_WALLPAPERS_BINARY),
+            &format!("out/{}", &CORE_SETTINGS_BINARY),
         )
         .unwrap();
 
