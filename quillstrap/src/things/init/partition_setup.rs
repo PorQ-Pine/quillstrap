@@ -43,12 +43,12 @@ impl SetupThing for PartitionSetup {
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         show_wait_toast(
-            "This process can brick your pinenote, destroy your data and kill a crab, make sure you took a backup. Do you wish to continue?",
+            "This process can brick your PineNote, destroy your data and kill a crab, make sure you took a backup. Do you wish to continue?",
         );
 
-        show_wait_toast("Please confirm you readed the docs on what is happening here, what it does to your device");
+        show_wait_toast("Please confirm you read the docs on what is happening here. Are you sure that you understand what it does to your device");
 
-        warn!("We assume because of expose_mmc deploy, the mmc is exposed as a block device");
+        warn!("We assume that because of expose_mmc deploy, the MMC is exposed as a block device");
 
         let disk = choose_disk();
 
@@ -61,7 +61,7 @@ impl SetupThing for PartitionSetup {
 
         let partitions = get_disk_partitions(&disk);
         if partitions.len() != 7 {
-            panic!("Wrong partition count, this is not the default partition set up, aborting");
+            panic!("Wrong partition count, this is not the default partition setup, aborting");
         }
 
         let good_partitions = vec![
@@ -75,7 +75,7 @@ impl SetupThing for PartitionSetup {
         ];
         // Well, we assume here no one has this naming
         show_wait_toast(&format!(
-            "Please confirm none of your partitions on your host device have these names in the gpt partition table: {} (You can check that by running gparted and looking under the \"Name\" tag of your disks)",
+            "Please confirm that none of your partitions on your host device have these names in the gpt partition table: {} (You can check that by running gparted and looking under the \"Name\" tag of your disks)",
             good_partitions.join(", ")
         ));
 
@@ -84,7 +84,7 @@ impl SetupThing for PartitionSetup {
             let label = get_partition_label(&partitions[i]);
             if label != label_expected {
                 panic!(
-                    "Wrong partition label: {} at: {}. Expected: {}, Aborting!",
+                    "Wrong partition label: {} at: {}. Expected: {}, aborting!",
                     label,
                     i + 1,
                     label_expected
@@ -94,19 +94,19 @@ impl SetupThing for PartitionSetup {
 
         let data_partition_usage_mb = get_partition_usage(get_partition("data").as_str());
         if data_partition_usage_mb > (9.5 * 1024.0) as u32 {
-            panic!("Data partition is used too much, we plan to resize it to 10GB, now it's: {}GB", data_partition_usage_mb as f32 /1024.0);
+            panic!("Data partition contains too much data, we plan to resize it to 10GB, now it's {}GB", data_partition_usage_mb as f32 /1024.0);
         } else {
             info!("Resizing data partition: will fit...")
         }
 
         let os2_partition_usage_mb = get_partition_usage(get_partition("os2").as_str());
         if os2_partition_usage_mb > 5 {
-            panic!("os2 partition is used, we plan to delete it!, it's usage is now: {}MB", os2_partition_usage_mb);
+            panic!("os2 partition is used, we plan to delete it! Its usage is now {}MB", os2_partition_usage_mb);
         } else {
             info!("os2 is empty, good");
         }
 
-        info!("This is the default expected partition set, good, proceeding the the process");
+        info!("This is the default expected partition set, good, proceeding");
         // Aaaa why
         run_command(
             &format!("sgdisk -e {}", disk),

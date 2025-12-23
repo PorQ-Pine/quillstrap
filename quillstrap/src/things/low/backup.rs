@@ -54,10 +54,10 @@ impl SetupThing for Backup {
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
-        warn!("We assume because of expose_mmc deploy, the mmc is exposed as a block device");
+        warn!("We assume that because of expose_mmc deploy, the MMC is exposed as a block device");
 
         let disk = choose_disk();
-        info!("Choosed disk: {}", disk);
+        info!("Chosen disk: {}", disk);
 
         let partitions = vec!["uboot", "waveform", "uboot_env", "logo"];
         let mut wrong = false;

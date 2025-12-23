@@ -15,7 +15,7 @@ impl SetupThing for CoreSettings {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec![]
+        vec!["quill_init", "kernel", "initrd", "rootfs"]
     }
 
     fn git(&self) -> &'static str {
@@ -90,6 +90,43 @@ impl SetupThing for CoreSettings {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
+        let ip_str = _options
+            .config
+            .deploy_ip_addr
+            .map(|b| b.to_string())
+            .join(".");
+
+        run_command(
+            &format!(
+                "ssh -p {} root@{} killall {}",
+                &_options.config.qinit_options.deploy_ssh_port, &ip_str, &CORE_SETTINGS_BINARY
+            ),
+            false,
+        )
+        .unwrap();
+        run_shell_command(
+            &format!(
+                "lftp {}:{} -e 'put out/{} -o /tmp/{}; bye'",
+                &ip_str,
+                &_options.config.qinit_options.deploy_ftp_port,
+                &CORE_SETTINGS_BINARY,
+                &CORE_SETTINGS_BINARY,
+            ),
+            true,
+        )
+        .unwrap();
+        run_shell_command(
+            &format!(
+                "ssh -t -p {} root@{} 'chmod 755 /tmp/{} && RUST_LOG=debug SLINT_KMS_ROTATION=270 SLINT_BACKEND_LINUXFB=1 /tmp/{}'",
+                &_options.config.qinit_options.deploy_ssh_port,
+                &ip_str,
+                &CORE_SETTINGS_BINARY,
+                &CORE_SETTINGS_BINARY,
+            ),
+            true,
+        )
+        .unwrap();
+
         Ok(())
     }
 

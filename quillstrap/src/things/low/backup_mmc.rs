@@ -47,12 +47,12 @@ impl SetupThing for BackupMmc {
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
-        warn!("We assume because of expose_mmc deploy, the mmc is exposed as a block device");
+        warn!("We assume that because of expose_mmc deploy, the MMC is exposed as a block device");
 
         let disk = choose_disk();
-        info!("Choosed disk: {}", disk);
+        info!("Chosen disk: {}", disk);
 
-        show_wait_toast("This will remove the old backup, if you don't want that, abort now!");
+        show_wait_toast("This will remove the old backup. If you don't want that, abort now!");
         warn!("Removing old backup");
         remove_file("pinenote_disk.qcow2", true).ok();
 
@@ -67,7 +67,7 @@ impl SetupThing for BackupMmc {
         .unwrap();
 
         if path_exists("pinenote_disk.qcow2") {
-            info!("Done! Hopefully it worked");
+            info!("Done! Hopefully, it worked");
             Ok(())
         } else {
             let str = "Backup wasn't taken, that's bad";

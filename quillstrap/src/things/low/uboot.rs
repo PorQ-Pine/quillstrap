@@ -101,7 +101,7 @@ impl SetupThing for Uboot {
 
         if todo == UbootStuffStatus::SkipAll {
             warn!(
-                "ToRuckUSBStatus is skip all, we don't flash spl loader, uboot deploy just exits, we assume we are already there"
+                "ToRockUSBStatus is skip all, we don't flash spl loader, uboot deploy just exits, we assume we are already there"
             );
             return Ok(());
         }
@@ -133,7 +133,7 @@ impl SetupThing for Uboot {
         }
 
         let w = Confirm::with_theme(&ColorfulTheme::default())
-        .with_prompt("in theory rkdevelop works now, do you want to flash new uboot?\nOtherwise you will stay in this mode (for example, for other tools that need rkdeveloptool)")
+        .with_prompt("In theory, rkdeveloptool works now. Do you want to flash new U-Boot?\nOtherwise you will stay in this mode (for example, for other tools that need rkdeveloptool)")
         .default(true)
         .show_default(true)
         .wait_for_newline(true)

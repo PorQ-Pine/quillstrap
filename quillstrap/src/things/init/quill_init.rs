@@ -161,7 +161,7 @@ impl SetupThing for QuillInit {
         // TODO: move this all to ssh commands from common
         // Also set password for qinit root
         if !_options.args.quill_init_options.qi_ssh_build {
-            error!("This is not a ssh build, yet we are deplying to ssh. You have been warned!");
+            error!("This is not an ssh build, yet we are deploying to ssh. You have been warned!");
         }
         let ip_str = _options
             .config

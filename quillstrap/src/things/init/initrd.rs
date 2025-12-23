@@ -83,7 +83,7 @@ impl SetupThing for InitRD {
                 "aarch64",
             );
         } else {
-            warn!("If you want to actually rebuild initrd alpine, you need to clean it first!");
+            warn!("If you want to actually rebuild Alpine initrd, you need to clean it first!");
         }
 
         // AlpineChrootInstall::turn_on_chroot(_options, &format!("{}/", self.name()));

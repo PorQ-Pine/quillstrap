@@ -43,7 +43,7 @@ impl SetupThing for BootPartition {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        warn!("We assume because of expose_mmc deploy, the mmc is exposed as a block device");
+        warn!("We assume that because of expose_mmc deploy, the MMC is exposed as a block device");
 
         let _disk = choose_disk();
 
