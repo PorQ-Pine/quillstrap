@@ -44,6 +44,15 @@ impl SetupThing for CoreSettings {
 
         dir_change(&CORE_SETTINGS_SRC_DIR);
 
+        let mut features: Vec<&str> = vec![];
+
+        if _options.config.unrestricted {
+            features.push("free_roam");
+        }
+        if _options.config.unsecure_debug {
+            features.push("debug");
+        }
+
         let full_path = get_path_of_thing_native(self, _options);
 
         set_var("PKG_CONFIG_ALLOW_CROSS", "1");
@@ -70,7 +79,10 @@ impl SetupThing for CoreSettings {
 
         if _options.args.quill_init_options.qi_ssh_build {
             run_command(
-                &format!("cargo zigbuild --target aarch64-unknown-linux-musl"),
+                &format!(
+                    "cargo zigbuild --target aarch64-unknown-linux-musl --features={}",
+                    features.join(",")
+                ),
                 _options.config.command_output,
             )
             .unwrap();
@@ -84,7 +96,10 @@ impl SetupThing for CoreSettings {
             .unwrap();
         } else {
             run_command(
-                &format!("cargo zigbuild --release --target aarch64-unknown-linux-musl"),
+                &format!(
+                    "cargo zigbuild --release --target aarch64-unknown-linux-musl --features={}",
+                    features.join(",")
+                ),
                 _options.config.command_output,
             )
             .unwrap();
