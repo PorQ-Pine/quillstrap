@@ -1,6 +1,7 @@
 use crate::prelude::*;
 
 pub const CORE_SETTINGS_BINARY: &str = "core_settings";
+pub const CORE_SETTINGS_SRC_DIR: &str = CORE_SETTINGS_BINARY;
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct CoreSettings;
@@ -32,12 +33,16 @@ impl SetupThing for CoreSettings {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
-        run_command("cargo clean", _options.config.command_output).expect("Failed to clean core-settings");
+        run_command("cargo clean", _options.config.command_output)
+            .expect("Failed to clean core-settings");
         Ok(())
     }
 
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
+        let cur_dir = dir_current();
         mkdir_p("out/");
+
+        dir_change(&CORE_SETTINGS_SRC_DIR);
 
         let full_path = get_path_of_thing_native(self, _options);
 
@@ -63,20 +68,35 @@ impl SetupThing for CoreSettings {
             ),
         );
 
-        run_command(
-            &format!(
-                "cargo zigbuild --release --target aarch64-unknown-linux-musl"
-            ),
-            _options.config.command_output,
-        )
-        .unwrap();
-        copy_file(
-            &format!(
-                "{}target/aarch64-unknown-linux-musl/release/{}", &full_path, &CORE_SETTINGS_BINARY
-            ),
-            &format!("out/{}", &CORE_SETTINGS_BINARY),
-        )
-        .unwrap();
+        if _options.args.quill_init_options.qi_ssh_build {
+            run_command(
+                &format!("cargo zigbuild --target aarch64-unknown-linux-musl"),
+                _options.config.command_output,
+            )
+            .unwrap();
+            copy_file(
+                &format!(
+                    "target/aarch64-unknown-linux-musl/debug/{}",
+                    &CORE_SETTINGS_BINARY
+                ),
+                &format!("../out/{}", &CORE_SETTINGS_BINARY),
+            )
+            .unwrap();
+        } else {
+            run_command(
+                &format!("cargo zigbuild --release --target aarch64-unknown-linux-musl"),
+                _options.config.command_output,
+            )
+            .unwrap();
+            copy_file(
+                &format!(
+                    "target/aarch64-unknown-linux-musl/release/{}",
+                    &CORE_SETTINGS_BINARY
+                ),
+                &format!("../out/{}", &CORE_SETTINGS_BINARY),
+            )
+            .unwrap();
+        }
 
         set_var("PKG_CONFIG_ALLOW_CROSS", "");
         set_var("PKG_CONFIG_SYSROOT_DIR", "");
@@ -86,6 +106,7 @@ impl SetupThing for CoreSettings {
         set_var("OPENSSL_INCLUDE_DIR", "");
         set_var("RUSTFLAGS", "");
 
+        dir_change(&cur_dir);
         Ok(())
     }
 
