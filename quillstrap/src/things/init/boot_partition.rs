@@ -18,7 +18,13 @@ impl SetupThing for BootPartition {
 
     fn deps(&self) -> Vec<&'static str> {
         // It needs them to deploy, but makes sense to keep them here
-        vec!["kernel", "eink_kernel_magic", "firmware", "procedural_wallpapers", "core_settings"]
+        vec![
+            "kernel",
+            "eink_kernel_magic",
+            "firmware",
+            "procedural_wallpapers",
+            "core_settings",
+        ]
     }
 
     fn git(&self) -> &'static str {
@@ -48,7 +54,8 @@ impl SetupThing for BootPartition {
         let _disk = choose_disk();
 
         let partition = get_partition("quill_boot");
-        let qinit_binaries_squashfs_path = format!("{}{}", &QUILL_BOOT_MOUNT_PATH, &QINIT_BINARIES_FILE);
+        let qinit_binaries_squashfs_path =
+            format!("{}{}", &QUILL_BOOT_MOUNT_PATH, &QINIT_BINARIES_FILE);
 
         mkdir_p(&QUILL_BOOT_MOUNT_PATH);
 
@@ -63,7 +70,20 @@ impl SetupThing for BootPartition {
             std::fs::remove_dir_all(&TMP_PATH).unwrap();
         }
         mkdir_p(&TMP_PATH);
-        copy_file(&format!("../procedural_wallpapers/out/{}", &PROCEDURAL_WALLPAPERS_BINARY), &format!("{}procedural_wallpapers", &TMP_PATH)).unwrap();
+        copy_file(
+            &format!(
+                "../procedural_wallpapers/out/{}",
+                &PROCEDURAL_WALLPAPERS_BINARY
+            ),
+            &format!("{}{}", &TMP_PATH, &PROCEDURAL_WALLPAPERS_BINARY),
+        )
+        .unwrap();
+        copy_file(
+            &format!("../core_settings/out/{}", &CORE_SETTINGS_BINARY),
+            &format!("{}{}", &TMP_PATH, &CORE_SETTINGS_BINARY),
+        )
+        .unwrap();
+
         let mksquashfs_cmd = if _options.config.compression_enabled {
             format!(
                 // TODO: mksquashfs options should go into a single variable somewhere, not be duplicated like that (from rootfs.rs) here
@@ -80,10 +100,22 @@ impl SetupThing for BootPartition {
             std::fs::remove_file(&qinit_binaries_squashfs_path).unwrap();
         }
         run_command(&mksquashfs_cmd, true).unwrap();
-        sign(&qinit_binaries_squashfs_path, &format!("{}.dgst", &qinit_binaries_squashfs_path), _options);
+        sign(
+            &qinit_binaries_squashfs_path,
+            &format!("{}.dgst", &qinit_binaries_squashfs_path),
+            _options,
+        );
 
-        copy_file("../kernel/out/Image.gz", &format!("{}Image.gz", &QUILL_BOOT_MOUNT_PATH)).unwrap();
-        copy_file("../kernel/out/DTB", &format!("{}DTB", &QUILL_BOOT_MOUNT_PATH)).unwrap();
+        copy_file(
+            "../kernel/out/Image.gz",
+            &format!("{}Image.gz", &QUILL_BOOT_MOUNT_PATH),
+        )
+        .unwrap();
+        copy_file(
+            "../kernel/out/DTB",
+            &format!("{}DTB", &QUILL_BOOT_MOUNT_PATH),
+        )
+        .unwrap();
 
         copy_file(
             "../firmware/out/wifi_bt/firmware.squashfs",
