@@ -28,12 +28,12 @@ fn main() -> Result<()> {
     env_logger::init_from_env(
         env_logger::Env::default().filter_or(env_logger::DEFAULT_FILTER_ENV, "info"),
     );
-    let args = Args::parse_validate();
+    let things = get_things();
+    let args = Args::parse_validate(&things);
 
     mkdir_p("../other/private");
     let config = Config::load();
     config.validate();
-    let things = get_things();
 
     let options = Options {
         args,

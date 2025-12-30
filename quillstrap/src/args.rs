@@ -54,6 +54,12 @@ pub struct Args {
         num_args = 1.., help_heading = GENERAL_OPTIONS
     )]
     pub is_built: Vec<String>,
+    #[arg(
+        long,
+        help = "Ignore choosen things in auto mode if ignore_built_checks is true",
+        num_args = 1.., help_heading = GENERAL_OPTIONS
+    )]
+    pub ignore_build_items: Vec<String>,
 
     #[arg(
         long,
@@ -89,7 +95,7 @@ pub struct FirmwareOptions {
 }
 
 impl Args {
-    pub fn parse_validate() -> Self {
+    pub fn parse_validate(things: &Vec<TraitWrapper>) -> Self {
         let mut args = Args::parse();
         debug!("Initial args structure: {:#?}", args);
 
@@ -152,6 +158,11 @@ impl Args {
             {
                 panic!("Only build is supported in auto mode");
             }
+        }
+
+        // Will error out below
+        for thing in &args.ignore_build_items {
+            let _ = get_thing_by_name(thing, things);
         }
 
         args

@@ -5,6 +5,10 @@ pub fn auto_build(impl_name: &TraitWrapper, options: &Options, already_built: &m
 
     // Check deps
     for deps in impl_name.deps() {
+        if options.args.ignore_build_items.contains(&deps.to_string()) {
+            info!("Ignoring {} because of ignore_build_items", deps);
+            continue;
+        }
         info!("Checking dep: {} required by {:?}", deps, impl_name.name());
         let dep_impl: TraitWrapper = get_thing_by_name(&deps, &options.things);
         dir_change(&options.path_of_repo);
