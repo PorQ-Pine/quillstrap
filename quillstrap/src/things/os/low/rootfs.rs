@@ -437,7 +437,17 @@ impl SetupThing for Rootfs {
             );
         }
 
-        // GUI packages modifications
+        // Make zsh default
+        let useradd_file = &format!("{}etc/default/useradd", RD);
+        let file = read_file_str(useradd_file.to_string()).unwrap();
+        if !file.contains("SHELL=/bin/zsh") {
+            replace_string_file(
+                useradd_file,
+                "SHELL=/bin/bash",
+                "SHELL=/bin/zsh",
+            );
+        }
+
         // Greetd
         // For tty to not appear with greetd, while running niri - probably not needed anymore
         /*
