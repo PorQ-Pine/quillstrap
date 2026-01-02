@@ -63,6 +63,7 @@ impl SetupThing for InitRD {
             "gocryptfs",
             "tzdata",
             "gptfdisk",
+            "squashfs-tools",
         ];
 
         if _options.config.unsecure_debug {
