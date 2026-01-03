@@ -151,6 +151,10 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "rg",
     "jq",
     "gammastep", // For tresholding level, doesn't work
+    // Fonts
+    "adwaita-mono-fonts",
+    "adwaita-sans-fonts",
+    "google-noto-serif-fonts",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
