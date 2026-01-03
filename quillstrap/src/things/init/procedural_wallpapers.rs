@@ -15,7 +15,7 @@ impl SetupThing for ProceduralWallpapers {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec![]
+        vec!["sysroot"]
     }
 
     fn git(&self) -> &'static str {

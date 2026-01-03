@@ -16,7 +16,7 @@ impl SetupThing for CoreSettings {
     }
 
     fn deps(&self) -> Vec<&'static str> {
-        vec!["quill_init", "kernel", "initrd", "rootfs"]
+        vec!["sysroot"]
     }
 
     fn git(&self) -> &'static str {
