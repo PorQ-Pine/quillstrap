@@ -168,6 +168,27 @@ impl Rootfs {
         dir_change(&cur_dir);
     }
 
+    pub fn execute_and_check_success(dir: &str, command: &str, show_output: bool) -> bool {
+        let cur_dir = dir_current();
+        let res = run_shell_command_and_check_success(
+            &format!("chroot {} {}", dir, command),
+            show_output,
+        )
+        .unwrap_or(false);
+        dir_change(&cur_dir);
+        res
+    }
+
+    pub fn package_is_installed(dir: &str, package_name: &str) -> bool {
+        let status = Rootfs::execute_and_check_success(dir, &format!("rpm -q {}", package_name), false);
+        if status {
+            info!("Package {} is already installed", package_name);
+        } else {
+            info!("Package {} is not installed", package_name);
+        }
+        status
+    }
+
     // Dir, with / at the end
     pub fn turn_on_chroot(dir: &str) {
         umount_recursive(dir);
@@ -343,18 +364,22 @@ impl SetupThing for Rootfs {
 
         // Zsh
         {
-            Rootfs::execute(
-                RD,
-                &format!(
-                    "dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/Fedora_Rawhide/shells:zsh-users:zsh-autosuggestions.repo"
-                ),
-                _options.config.command_output,
-            );
-            Rootfs::execute(
-                RD,
-                &format!("dnf --assumeyes install zsh zsh-autosuggestions"),
-                _options.config.command_output,
-            );
+            if !Rootfs::package_is_installed(RD, "zsh")
+                || !Rootfs::package_is_installed(RD, "zsh-autosuggestions")
+            {
+                Rootfs::execute(
+                    RD,
+                    &format!(
+                        "dnf config-manager addrepo --from-repofile=https://download.opensuse.org/repositories/shells:zsh-users:zsh-autosuggestions/Fedora_Rawhide/shells:zsh-users:zsh-autosuggestions.repo"
+                    ),
+                    _options.config.command_output,
+                );
+                Rootfs::execute(
+                    RD,
+                    &format!("dnf --assumeyes install zsh zsh-autosuggestions"),
+                    _options.config.command_output,
+                );
+            }
             Rootfs::execute(RD, &format!("chsh -s /usr/bin/zsh root"), true);
             mkdir_p(&format!("{}etc/zsh/zsh-autosuggestions", RD));
             create_file_symlink(
@@ -368,11 +393,15 @@ impl SetupThing for Rootfs {
         // Other configs, manually
         // Dropbear
         if _options.config.unsecure_debug {
-            Rootfs::execute(
-                RD,
-                &format!("dnf --assumeyes install dropbear openssh-server"),
-                true,
-            );
+            if !Rootfs::package_is_installed(RD, "dropbear")
+                || !Rootfs::package_is_installed(RD, "openssh-server")
+            {
+                Rootfs::execute(
+                    RD,
+                    &format!("dnf --assumeyes install dropbear openssh-server"),
+                    true,
+                );
+            }
             create_file_symlink(
                 "../../boot/rsa_hkey",
                 &format!(" {}etc/dropbear/dropbear_rsa_host_key", RD),
@@ -445,11 +474,7 @@ impl SetupThing for Rootfs {
         let useradd_file = &format!("{}etc/default/useradd", RD);
         let file = read_file_str(useradd_file.to_string()).unwrap();
         if !file.contains("SHELL=/bin/zsh") {
-            replace_string_file(
-                useradd_file,
-                "SHELL=/bin/bash",
-                "SHELL=/bin/zsh",
-            );
+            replace_string_file(useradd_file, "SHELL=/bin/bash", "SHELL=/bin/zsh");
         }
 
         // Greetd
@@ -526,16 +551,18 @@ impl SetupThing for Rootfs {
         Rootfs::execute(RD, "systemd-hwdb update", _options.config.command_output);
 
         // Nerd fonts for eww
-        Rootfs::execute(
-            RD,
-            "dnf copr enable che/nerd-fonts -y",
-            _options.config.command_output,
-        );
-        Rootfs::execute(
-            RD,
-            "dnf install nerd-fonts -y",
-            _options.config.command_output,
-        );
+        if !Rootfs::package_is_installed(RD, "nerd-fonts") {
+            Rootfs::execute(
+                RD,
+                "dnf copr enable che/nerd-fonts -y",
+                _options.config.command_output,
+            );
+            Rootfs::execute(
+                RD,
+                "dnf install nerd-fonts -y",
+                _options.config.command_output,
+            );
+        }
 
         // Rnote - welp, doesn't launch
         /*
@@ -547,18 +574,8 @@ impl SetupThing for Rootfs {
         Rootfs::execute(RD, "dnf install rnote -y", _options.config.command_output);
         */
 
-        // Anki
-        // TODO: In config, based on enums choose what to install
-        Rootfs::execute(
-            RD,
-            "dnf copr enable hazel-bunny/anki -y",
-            _options.config.command_output,
-        );
-        Rootfs::execute(
-            RD,
-            "dnf install anki-bin -y",
-            _options.config.command_output,
-        );
+        // Optional apps
+        install_optional_apps(_options, RD);
 
         // Niri
         copy_file(

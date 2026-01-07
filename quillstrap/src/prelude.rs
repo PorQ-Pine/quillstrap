@@ -55,5 +55,6 @@ pub use crate::things::os::gui::eww_niri_toolbar::*;
 pub use crate::things::os::gui::koreader::*;
 pub use crate::things::os::gui::eww_data_provider::*;
 pub use crate::things::os::low::pinenote_service::*;
+pub use crate::things::os::gui::rootfs_optional_apps::*;
 pub use std::fs::remove_dir_all;
 pub use std::path::PathBuf;

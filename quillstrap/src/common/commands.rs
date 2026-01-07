@@ -54,6 +54,29 @@ pub fn run_shell_command(command: &str, show_output: bool) -> io::Result<()> {
     Ok(())
 }
 
+pub fn run_shell_command_and_check_success(command: &str, show_output: bool) -> io::Result<bool> {
+    if show_output {
+        info!("Executing \"{}\" in shell", command);
+    }
+
+    let status = Command::new("bash")
+        .arg("-c")
+        .arg(command)
+        .stdout(if !show_output {
+            Stdio::null()
+        } else {
+            Stdio::inherit()
+        })
+        .stderr(if !show_output {
+            Stdio::null()
+        } else {
+            Stdio::inherit()
+        })
+        .status()?;
+
+    Ok(status.success())
+}
+
 pub fn run_command_get_output(command: &str) -> String {
     let mut parts = command.split_whitespace();
     if let Some(program) = parts.next() {
