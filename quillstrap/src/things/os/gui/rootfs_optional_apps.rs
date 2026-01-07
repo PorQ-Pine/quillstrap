@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 pub fn install_optional_apps(options: &crate::Options, rd: &str) {
     if options
-        .args
+        .config
         .optional_apps
         .contains(&String::from_str("anki").unwrap())
     {
@@ -12,12 +12,21 @@ pub fn install_optional_apps(options: &crate::Options, rd: &str) {
     }
 
     if options
-        .args
+        .config
         .optional_apps
         .contains(&String::from_str("obsidian").unwrap())
     {
         info!("Installing obsidian");
         install_obsidian(options, rd);
+    }
+
+    if options
+        .config
+        .optional_apps
+        .contains(&String::from_str("syncthing").unwrap())
+    {
+        info!("Installing syncthing");
+        install_syncthing(options, rd);
     }
 }
 
@@ -34,11 +43,12 @@ fn install_anki(options: &crate::Options, rd: &str) {
 
 pub const OBSIDIAN_DESKTOP: &str = "[Desktop Entry]
 Name=Obsidian
-Exec=/usr/bin/obsidian.AppImage
+Exec=/usr/bin/obsidian.AppImage --no-sandbox --enable-features=UseOzonePlatform --ozone-platform=wayland
 Icon=obsidian
 Type=Application
 Terminal=false
 Categories=Office;";
+
 fn install_obsidian(options: &crate::Options, rd: &str) {
     if !path_exists("other/obsidian.AppImage") {
         mkdir_p("other");
@@ -66,4 +76,14 @@ fn install_obsidian(options: &crate::Options, rd: &str) {
         &format!("{}usr/share/applications/obsidian.desktop", rd),
     )
     .unwrap();
+}
+
+fn install_syncthing(options: &crate::Options, rd: &str) {
+    if !Rootfs::package_is_installed(rd, "syncthing") {
+        Rootfs::execute(
+            rd,
+            "dnf install syncthing -y",
+            options.config.command_output,
+        );
+    }
 }

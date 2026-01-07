@@ -51,6 +51,11 @@ pub struct Config {
     pub qinit_options: QinitOptions,
     pub rootfs_options: RootfsOptions,
     pub compression_enabled: bool,
+    // "Optional apps to install in rootfs, possible apps: anki, obsidian, syncthing",
+    pub optional_apps: Vec<String>,
+    // Both need to be set to take effect
+    pub rootfs_user: String,
+    pub rootfs_user_password: String,
 }
 
 impl Default for Config {
@@ -73,6 +78,9 @@ impl Default for Config {
                 deploy_ssh_port: 22,
             },
             compression_enabled: true,
+            optional_apps: Vec::new(),
+            rootfs_user: String::new(),
+            rootfs_user_password: String::new(),
         }
     }
 }
@@ -123,7 +131,7 @@ impl Config {
     }
 
     pub fn validate(&self) {
-        if self.deploy_ip_addr == [0,0,0,0] {
+        if self.deploy_ip_addr == [0, 0, 0, 0] {
             warn!("The qinit deploy ip address is not set, it will not work!");
         }
     }

@@ -47,6 +47,10 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "gtk-layer-shell",
     "libbsd",
     "xcb-util-cursor",
+    // Appimages
+    "fuse",
+    "fuse-libs",
+    "zlib-devel", // obsidian
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -111,6 +115,9 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "krusader",
     // Text editor
     "kate",
+    // PDF
+    "okular",
+    "xdg-utils",
     // Audio codecs
     "gstreamer1-plugins-base",
     "gstreamer1-plugins-good",
@@ -180,7 +187,8 @@ impl Rootfs {
     }
 
     pub fn package_is_installed(dir: &str, package_name: &str) -> bool {
-        let status = Rootfs::execute_and_check_success(dir, &format!("rpm -q {}", package_name), false);
+        let status =
+            Rootfs::execute_and_check_success(dir, &format!("rpm -q {}", package_name), false);
         if status {
             info!("Package {} is already installed", package_name);
         } else {
@@ -680,6 +688,52 @@ impl SetupThing for Rootfs {
         // Idk if it's needed for bt after all
     format!("{}etc/udev/rules.d/71-bluetooth-powersave.rules", RD),
     r#"ACTION=="add|change", KERNEL=="hci*", SUBSYSTEM=="bluetooth", ATTR{device/power/control}="on""#).unwrap();
+
+        // PDF okular override
+        Rootfs::execute(
+            RD,
+            "update-desktop-database",
+            _options.config.command_output,
+        );
+
+        // Add a user
+        if !_options.config.rootfs_user.is_empty()
+            && !_options.config.rootfs_user_password.is_empty()
+        {
+            info!(
+                "Adding user {} with password {}",
+                _options.config.rootfs_user, _options.config.rootfs_user_password
+            );
+            Rootfs::execute(
+                RD,
+                &format!("useradd {}", _options.config.rootfs_user),
+                _options.config.command_output,
+            );
+            /*
+            Rootfs::execute(
+                RD,
+                &format!(
+                    "sh -c \"echo '{}:{}' | chpasswd\"",
+                    _options.config.rootfs_user, _options.config.rootfs_user_password
+                ),
+                _options.config.command_output,
+            );
+             */
+            let output = std::process::Command::new("chroot")
+                .arg(RD)
+                .arg("sh")
+                .arg("-c")
+                .arg(format!(
+                    "echo '{}:{}' | chpasswd",
+                    _options.config.rootfs_user, _options.config.rootfs_user_password
+                ))
+                .output()
+                .expect("Failed to execute command in chroot");
+
+            if !output.status.success() {
+                error!("{}", String::from_utf8_lossy(&output.stderr));
+            }
+        }
 
         // Cleanout
         umount_recursive(RD);

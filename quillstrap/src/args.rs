@@ -60,12 +60,6 @@ pub struct Args {
         num_args = 1.., help_heading = GENERAL_OPTIONS
     )]
     pub ignore_build_items: Vec<String>,
-    #[arg(
-        long,
-        help = "Optional apps to install in rootfs, possible apps: anki, obsidian",
-        num_args = 1.., help_heading = GENERAL_OPTIONS
-    )]
-    pub optional_apps: Vec<String>,
 
     #[arg(
         long,
