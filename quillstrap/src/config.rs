@@ -51,8 +51,9 @@ pub struct Config {
     pub qinit_options: QinitOptions,
     pub rootfs_options: RootfsOptions,
     pub compression_enabled: bool,
-    // "Optional apps to install in rootfs, possible apps: anki, obsidian, syncthing",
+    // "Optional apps to install in rootfs, possible apps: anki, obsidian",
     pub optional_apps: Vec<String>,
+    pub optional_packages: Vec<String>, // Just more packages to install in rootfs
     // Both need to be set to take effect
     pub rootfs_user: String,
     pub rootfs_user_password: String,
@@ -79,6 +80,7 @@ impl Default for Config {
             },
             compression_enabled: true,
             optional_apps: Vec::new(),
+            optional_packages: Vec::new(),
             rootfs_user: String::new(),
             rootfs_user_password: String::new(),
         }

@@ -20,13 +20,17 @@ pub fn install_optional_apps(options: &crate::Options, rd: &str) {
         install_obsidian(options, rd);
     }
 
-    if options
-        .config
-        .optional_apps
-        .contains(&String::from_str("syncthing").unwrap())
-    {
-        info!("Installing syncthing");
-        install_syncthing(options, rd);
+    if !options.config.optional_packages.is_empty() {
+        for package in &options.config.optional_packages {
+            if !Rootfs::package_is_installed(rd, package) {
+                info!(
+                    "Package {} (or more) is missing, installing optional packages",
+                    package
+                );
+                Rootfs::execute(rd, &format!("dnf install {} -y", options.config.optional_packages.join(" ")), options.config.command_output);
+                break;
+            }
+        }
     }
 }
 
@@ -76,14 +80,4 @@ fn install_obsidian(options: &crate::Options, rd: &str) {
         &format!("{}usr/share/applications/obsidian.desktop", rd),
     )
     .unwrap();
-}
-
-fn install_syncthing(options: &crate::Options, rd: &str) {
-    if !Rootfs::package_is_installed(rd, "syncthing") {
-        Rootfs::execute(
-            rd,
-            "dnf install syncthing -y",
-            options.config.command_output,
-        );
-    }
 }
