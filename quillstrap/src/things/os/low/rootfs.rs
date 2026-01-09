@@ -706,7 +706,7 @@ impl SetupThing for Rootfs {
             );
             Rootfs::execute(
                 RD,
-                &format!("useradd {}", _options.config.rootfs_user),
+                &format!("useradd -M -G wheel {}", _options.config.rootfs_user),
                 _options.config.command_output,
             );
             /*
