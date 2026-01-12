@@ -84,7 +84,7 @@ RUN apt-get install -y git-lfs
 RUN apt-get install -y alien
 
 # D2
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     libnss3 \
     libnspr4 \
     libatk1.0-0t64 \
