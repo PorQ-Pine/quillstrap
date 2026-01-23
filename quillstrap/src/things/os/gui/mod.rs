@@ -4,7 +4,7 @@ pub mod niri;
 pub mod eww;
 pub mod eww_niri_toolbar;
 pub mod koreader;
-pub mod eww_data_provider;
+pub mod quill_data_provider;
 pub mod squeekboard;
 pub mod xournalpp;
 pub mod xwayland_satellite;

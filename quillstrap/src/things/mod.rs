@@ -36,7 +36,7 @@ pub enum TraitWrapper {
     TwEww(Eww),
     TwEwwNiriToolbar(EwwNiriToolbar),
     TwKoreader(Koreader),
-    TwEwwDataProvider(EwwDataProvider),
+    TwEwwDataProvider(QuillDataProvider),
     TwAnvil(Anvil),
     TwPinenoteService(PinenoteService),
     TwSqueekboard(Squeekboard),

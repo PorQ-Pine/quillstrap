@@ -1,11 +1,11 @@
 use crate::prelude::*;
 
 #[derive(Clone, Copy, Default, Debug)]
-pub struct EwwDataProvider;
+pub struct QuillDataProvider;
 
-impl SetupThing for EwwDataProvider {
+impl SetupThing for QuillDataProvider {
     fn name(&self) -> &'static str {
-        "eww_data_provider"
+        "quill_data_provider"
     }
 
     fn path(&self) -> &'static str {
@@ -17,7 +17,7 @@ impl SetupThing for EwwDataProvider {
     }
 
     fn git(&self) -> &'static str {
-        "eww-data-provider"
+        "quill-data-provider"
     }
 
     fn get(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
