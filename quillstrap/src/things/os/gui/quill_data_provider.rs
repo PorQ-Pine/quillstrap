@@ -26,8 +26,13 @@ impl SetupThing for QuillDataProvider {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider") &&
-        path_exists("eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester")
+        path_exists("eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider")
+            && path_exists(
+                "eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester",
+            )
+            && path_exists(
+                "eink_window_settings/target/aarch64-unknown-linux-gnu/release/eink_window_settings",
+            )
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
@@ -60,13 +65,19 @@ impl SetupThing for QuillDataProvider {
             ),
         );
 
-        dir_change("eww-data-provider");
+        dir_change("quill-data-provider");
         run_command(
             "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
             _options.config.command_output,
         )
         .unwrap();
         dir_change("../eww-data-requester");
+        run_command(
+            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            _options.config.command_output,
+        )
+        .unwrap();
+        dir_change("../eink_window_settings");
         run_command(
             "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
             _options.config.command_output,
@@ -87,9 +98,19 @@ impl SetupThing for QuillDataProvider {
         let port = _options.config.rootfs_options.deploy_ssh_port;
         ssh_execute("killall -9 eww-data-provider", port, _options);
         ssh_execute("rm -rf /usr/bin/eww-data-provider", port, _options);
-        ssh_send("eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider", "/usr/bin/eww-data-provider", port, _options);
+        ssh_send(
+            "eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider",
+            "/usr/bin/eww-data-provider",
+            port,
+            _options,
+        );
         // We do not kill it, kill eww manually
-        ssh_send("eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", "/usr/bin/eww-data-requester", port, _options);
+        ssh_send(
+            "eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester",
+            "/usr/bin/eww-data-requester",
+            port,
+            _options,
+        );
         Ok(())
     }
 
