@@ -26,7 +26,7 @@ impl SetupThing for QuillDataProvider {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider")
+        path_exists("quill-data-provider/target/aarch64-unknown-linux-gnu/release/quill-data-provider")
             && path_exists(
                 "eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester",
             )
