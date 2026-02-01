@@ -238,7 +238,7 @@ impl SetupThing for Rootfs {
             "rootfs_configs",
             "greetd",
             "eww_config",
-            "eww_data_provider",
+            "quill_data_provider",
             "eww_niri_toolbar",
             "eww",
             "koreader",
@@ -551,8 +551,8 @@ impl SetupThing for Rootfs {
         )
         .unwrap();
         // Eww data provider
-        copy_file("../../gui/eww_data_provider/quill-data-provider/target/aarch64-unknown-linux-gnu/release/quill-data-provider", &format!("{}usr/bin/quill-data-provider", RD)).unwrap();
-        copy_file("../../gui/eww_data_provider/eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", &format!("{}usr/bin/eww-data-requester", RD)).unwrap();
+        copy_file("../../gui/quill_data_provider/quill-data-provider/target/aarch64-unknown-linux-gnu/release/quill-data-provider", &format!("{}usr/bin/quill-data-provider", RD)).unwrap();
+        copy_file("../../gui/quill_data_provider/eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", &format!("{}usr/bin/eww-data-requester", RD)).unwrap();
 
         // Initial rotation, idk if it's the best way
         // Set in rootfs_config, here we only apply, idk if its needed anyway
@@ -853,7 +853,7 @@ passwd szybet
 (Now we need to copy skel there)
 gocryptfs /home/.szybet /home/szybet
 # This will remove your configurations!
-rm -rf /home/szybet/.*
+#rm# #-rf /home/szybet/.*
 cp -r /etc/skel/.* /home/szybet/
 sudo chown -R szybet:szybet /home/szybet # Important permissions
 umount /home/szybet

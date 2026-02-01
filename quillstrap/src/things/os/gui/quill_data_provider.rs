@@ -96,11 +96,11 @@ impl SetupThing for QuillDataProvider {
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
         let port = _options.config.rootfs_options.deploy_ssh_port;
-        ssh_execute("killall -9 eww-data-provider", port, _options);
-        ssh_execute("rm -rf /usr/bin/eww-data-provider", port, _options);
+        ssh_execute("killall -9 quill-data-provider", port, _options);
+        ssh_execute("rm -rf /usr/bin/quill-data-provider", port, _options);
         ssh_send(
-            "eww-data-provider/target/aarch64-unknown-linux-gnu/release/eww-data-provider",
-            "/usr/bin/eww-data-provider",
+            "quill-data-provider/target/aarch64-unknown-linux-gnu/release/quill-data-provider",
+            "/usr/bin/quill-data-provider",
             port,
             _options,
         );
