@@ -31,7 +31,7 @@ impl SetupThing for QuillDataProvider {
                 "eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester",
             )
             && path_exists(
-                "eink_window_settings/target/aarch64-unknown-linux-gnu/release/eink_window_settings",
+                "eink-window-settings/target/aarch64-unknown-linux-gnu/release/eink-window-settings",
             )
     }
 
@@ -77,7 +77,7 @@ impl SetupThing for QuillDataProvider {
             _options.config.command_output,
         )
         .unwrap();
-        dir_change("../eink_window_settings");
+        dir_change("../eink-window-settings");
         run_command(
             "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
             _options.config.command_output,

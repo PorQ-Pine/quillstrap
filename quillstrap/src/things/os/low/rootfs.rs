@@ -550,9 +550,11 @@ impl SetupThing for Rootfs {
             &format!("{}usr/bin/eww-niri-taskbar", RD),
         )
         .unwrap();
-        // Eww data provider
+        // Quill data provider
         copy_file("../../gui/quill_data_provider/quill-data-provider/target/aarch64-unknown-linux-gnu/release/quill-data-provider", &format!("{}usr/bin/quill-data-provider", RD)).unwrap();
         copy_file("../../gui/quill_data_provider/eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", &format!("{}usr/bin/eww-data-requester", RD)).unwrap();
+        copy_file("../../gui/quill_data_provider/eink-window-settings/target/aarch64-unknown-linux-gnu/release/eink-window-settings", &format!("{}usr/bin/eink-window-settings", RD)).unwrap();
+        copy_file("../../gui/quill_data_provider/eink-window-settings/other/eink-window-settings.desktop", &format!("{}usr/share/applications/eink-window-settings.desktop", RD)).unwrap();
 
         // Initial rotation, idk if it's the best way
         // Set in rootfs_config, here we only apply, idk if its needed anyway
