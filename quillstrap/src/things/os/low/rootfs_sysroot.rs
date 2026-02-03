@@ -37,6 +37,13 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "libbsd-devel",
     "feedbackd-devel",
     "xcb-util-cursor-devel",
+    // Slint qt
+    "qt5-qtwayland-devel",
+    "qt6-qtwayland-devel",
+    "qt5-qtbase-devel",
+    "qt6-qtbase-devel",
+    "qt5-qtsvg-devel",
+    "qt6-qtsvg-devel",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]

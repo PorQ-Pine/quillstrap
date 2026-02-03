@@ -9,3 +9,4 @@ pub mod squeekboard;
 pub mod xournalpp;
 pub mod xwayland_satellite;
 pub mod rootfs_optional_apps;
+pub mod cosmic_wanderer;

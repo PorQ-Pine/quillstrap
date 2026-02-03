@@ -51,6 +51,13 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "fuse",
     "fuse-libs",
     "zlib-devel", // obsidian
+    // Slint qt backend
+    "qt5-qtwayland",
+    "qt6-qtwayland",
+    "qt5-qtbase",
+    "qt6-qtbase",
+    "qt5-qtsvg",
+    "qt6-qtsvg",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -102,7 +109,6 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     // Breaks bluetoothctl? - seems to work just fine now
     "blueman",
     "dejavu-fonts-all",
-    "nwg-drawer",
     "firefox",
     "network-manager-applet",
     "swaybg",
@@ -162,6 +168,10 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "adwaita-mono-fonts",
     "adwaita-sans-fonts",
     "google-noto-serif-fonts",
+    // Portals
+    "xdg-desktop-portal",
+    "xdg-desktop-portal-gnome",
+    "xdg-desktop-portal-gtk",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
@@ -554,7 +564,11 @@ impl SetupThing for Rootfs {
         copy_file("../../gui/quill_data_provider/quill-data-provider/target/aarch64-unknown-linux-gnu/release/quill-data-provider", &format!("{}usr/bin/quill-data-provider", RD)).unwrap();
         copy_file("../../gui/quill_data_provider/eww-data-requester/target/aarch64-unknown-linux-gnu/release/eww-data-requester", &format!("{}usr/bin/eww-data-requester", RD)).unwrap();
         copy_file("../../gui/quill_data_provider/eink-window-settings/target/aarch64-unknown-linux-gnu/release/eink-window-settings", &format!("{}usr/bin/eink-window-settings", RD)).unwrap();
-        copy_file("../../gui/quill_data_provider/eink-window-settings/other/eink-window-settings.desktop", &format!("{}usr/share/applications/eink-window-settings.desktop", RD)).unwrap();
+        copy_file(
+            "../../gui/quill_data_provider/eink-window-settings/other/eink-window-settings.desktop",
+            &format!("{}usr/share/applications/eink-window-settings.desktop", RD),
+        )
+        .unwrap();
 
         // Initial rotation, idk if it's the best way
         // Set in rootfs_config, here we only apply, idk if its needed anyway
@@ -674,6 +688,18 @@ impl SetupThing for Rootfs {
 
         // Xournalpp
         copy_dir_content("../../gui/xournalpp/build/install/", &format!("{}usr/", RD));
+
+        // Cosmic wanderer
+        copy_file(
+            "../../gui/cosmic_wanderer/target/aarch64-unknown-linux-gnu/release/cosmic-wanderer",
+            &format!("{}usr/bin/cosmic-wanderer", RD),
+        )
+        .unwrap();
+        copy_file(
+            "../../gui/cosmic_wanderer/cosmic-wanderer-opener/target/aarch64-unknown-linux-gnu/release/cosmic-wanderer-opener",
+            &format!("{}usr/bin/cosmic-wanderer-opener", RD),
+        )
+        .unwrap();
 
         // Networking
         Rootfs::execute(
