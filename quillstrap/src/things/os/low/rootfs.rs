@@ -258,6 +258,7 @@ impl SetupThing for Rootfs {
             "squeekboard",
             "xournalpp",
             "xwayland_satellite",
+            "cosmic_wanderer",
         ]
     }
 
@@ -567,6 +568,14 @@ impl SetupThing for Rootfs {
         copy_file(
             "../../gui/quill_data_provider/eink-window-settings/other/eink-window-settings.desktop",
             &format!("{}usr/share/applications/eink-window-settings.desktop", RD),
+        )
+        .unwrap();
+        // Copy the default config to skel
+        // We can't include the library because we need to download it, byt running this program, so we do this manually not using the const variables
+        mkdir_p(&format!("{}etc/skel/.config/eink-window-settings", RD));
+        copy_file(
+            "../../gui/quill_data_provider/eink-window-settings/other/default/config.ron",
+            &format!("{}etc/skel/.config/eink-window-settings/config.ron", RD),
         )
         .unwrap();
 
