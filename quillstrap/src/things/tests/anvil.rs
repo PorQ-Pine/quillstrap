@@ -26,12 +26,13 @@ impl SetupThing for Anvil {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        run_command("cargo clean", _options.config.command_output).unwrap();
         Ok(())
     }
 
     // no one cares
     fn is_built(&self) -> bool {
-        true
+        path_exists("target/aarch64-unknown-linux-gnu/release/anvil")
     }
 
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
@@ -84,10 +85,25 @@ impl SetupThing for Anvil {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        todo!();
+        let port = _options.config.rootfs_options.deploy_ssh_port;
+        ssh_execute("killall -9 anvil", port, _options);
+        ssh_execute("rm -rf /usr/bin/anvil", port, _options);
+        ssh_send(
+            "target/aarch64-unknown-linux-gnu/release/smallvil",
+            "/usr/bin/anvil",
+            port,
+            _options,
+        );
+        Ok(())
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
         todo!()
     }
 }
+
+/*
+To run it:
+env ANVIL_DRM_DEVICE="/dev/dri/card1" ANVIL_DISABLE_10BIT=1 ANVIL_DISABLE_DIRECT_SCANOUT=1 ANVIL_GLES_DISABLE_INSTANCING=1 anvil --tty-udev
+in tuigreet command. Doesn't work anyway
+*/

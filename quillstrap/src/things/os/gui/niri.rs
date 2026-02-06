@@ -30,6 +30,7 @@ impl SetupThing for Niri {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        run_command("cargo clean", _options.config.command_output).unwrap();
         Ok(())
     }
 

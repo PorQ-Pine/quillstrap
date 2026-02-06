@@ -898,7 +898,7 @@ umount /home/szybet
 To log in from cli: (Remember to kill quillinit via htop, sort via PID)
 also stop qoms:
 systemctl stop qoms
-export GREETD_SOCK=/run/greetd-X.sock
+export GREETD_SOCK="/run/greetd-$(ls /run/ | grep -E '^greetd-[0-9]+\.sock$' | sort -n | tail -n 1 | cut -d'-' -f2)"
 tuigreetd
 
 Wayland/niri/GUI socket:
@@ -913,6 +913,6 @@ systemctl stop greetd
 killall -9 niri
 rm -rf /run/greetd-*.sock
 systemctl start greetd
-export GREETD_SOCK=/run/greetd-X.sock
+export GREETD_SOCK="/run/greetd-$(sleep 0.5 | ls /run/ | grep -E '^greetd-[0-9]+\.sock$' | sort -n | tail -n 1 | cut -d'-' -f2)"
 tuigreet
 */
