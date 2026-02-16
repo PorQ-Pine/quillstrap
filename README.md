@@ -1,5 +1,5 @@
 ### Quillstrap
-A tool to build/run/deploy Quill OS on the pinenote
+A tool to build/run/deploy Quill OS on the PineNote
 
 A glorified Bash script used to build things.
 
