@@ -7,4 +7,4 @@ A glorified Bash script used to build things.
 
 ### If you have issues to report, open them in this repo (even if it's other repo's related)
 
-Also, our discord: https://discord.com/invite/uSWtWbY23m
+Also, our matrix space: https://matrix.to/#/#porq-pine:matrix.org
