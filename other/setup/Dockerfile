@@ -3,7 +3,7 @@ FROM ubuntu:24.04
 # Missing stuff in container
 # For some reason, apt update needs to be with the first install via &&
 RUN apt-get update && apt-get install -y ripgrep htop psmisc wget unzip file tio vim
-ENV PATH="${PATH}:/workspaces/quillstrap/other/path"
+RUN echo 'export PATH="$PATH:$(find /workspaces -type d -path "*/other/path" | head -n 1)"' >> /etc/bash.bashrc
 
 # Rust stuff
 RUN apt-get install -y gcc build-essential curl ca-certificates pkg-config libinput10 pkg-config libusb-1.0-0-dev libftdi1-dev libudev-dev
