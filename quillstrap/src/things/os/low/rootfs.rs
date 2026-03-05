@@ -259,6 +259,7 @@ impl SetupThing for Rootfs {
             "xournalpp",
             "xwayland_satellite",
             "cosmic_wanderer",
+            "lisgd",
         ]
     }
 
@@ -710,6 +711,13 @@ impl SetupThing for Rootfs {
         )
         .unwrap();
 
+        // Lisgd
+        copy_file(
+            "../../gui/lisgd/lisgd",
+            &format!("{}usr/bin/lisgd", RD),
+        )
+        .unwrap();
+
         // Networking
         Rootfs::execute(
             RD,
@@ -746,6 +754,12 @@ impl SetupThing for Rootfs {
                 &format!("useradd -M -G wheel {}", _options.config.rootfs_user),
                 _options.config.command_output,
             );
+            Rootfs::execute(
+                RD,
+                &format!("useradd -M -G input {}", _options.config.rootfs_user),
+                _options.config.command_output,
+            );
+            
             /*
             Rootfs::execute(
                 RD,

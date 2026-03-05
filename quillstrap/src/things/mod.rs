@@ -45,6 +45,7 @@ pub enum TraitWrapper {
     TwProceduralWallpapers(ProceduralWallpapers),
     TwCoreSettings(CoreSettings),
     TwCosmicWanderer(CosmicWanderer),
+    TwLisgd(Lisgd),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -88,6 +89,7 @@ macro_rules! forward {
             TraitWrapper::TwProceduralWallpapers(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwCoreSettings(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwCosmicWanderer(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwLisgd(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -173,6 +175,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwProceduralWallpapers(Default::default()),
         TwCoreSettings(Default::default()),
         TwCosmicWanderer(Default::default()),
+        TwLisgd(Default::default()),
     ]
 }
 
