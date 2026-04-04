@@ -72,6 +72,8 @@ impl SetupThing for InitRD {
                 "dropbear-ssh",
                 "dropbear-scp",
                 "openssh-sftp-server",
+                "nftables",
+                "redsocks",
             ];
             packages.append(&mut debug_packages);
         }
