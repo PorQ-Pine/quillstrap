@@ -51,6 +51,7 @@ pub use crate::things::os::gui::xwayland_satellite::*;
 pub use crate::things::common::libquillcom::*;
 pub use crate::things::tests::anvil::*;
 pub use crate::things::os::gui::eww::*;
+pub use crate::things::os::gui::orbit::*;
 pub use crate::things::os::gui::eww_niri_toolbar::*;
 pub use crate::things::os::gui::koreader::*;
 pub use crate::things::os::gui::quill_data_provider::*;

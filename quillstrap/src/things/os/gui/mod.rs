@@ -11,3 +11,4 @@ pub mod xwayland_satellite;
 pub mod rootfs_optional_apps;
 pub mod cosmic_wanderer;
 pub mod lisgd;
+pub mod orbit;

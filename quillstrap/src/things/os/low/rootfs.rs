@@ -58,6 +58,9 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     "qt6-qtbase",
     "qt5-qtsvg",
     "qt6-qtsvg",
+    // Orbit
+    "gtk4",
+    "gtk4-layer-shell",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -106,8 +109,9 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "tilix", // I can't configure it's default terminal font from here... Anyway the gui allows to change it easily
     "bluez",
     "bluez-tools",
-    // Breaks bluetoothctl? - seems to work just fine now
-    "blueman",
+    // Bluetooth stuff
+    "bluez",
+    "bluez-obexd",
     "dejavu-fonts-all",
     "firefox",
     "network-manager-applet",
@@ -260,6 +264,7 @@ impl SetupThing for Rootfs {
             "xwayland_satellite",
             "cosmic_wanderer",
             "lisgd",
+            "orbit",
         ]
     }
 
@@ -712,9 +717,12 @@ impl SetupThing for Rootfs {
         .unwrap();
 
         // Lisgd
+        copy_file("../../gui/lisgd/lisgd", &format!("{}usr/bin/lisgd", RD)).unwrap();
+
+        // Orbit
         copy_file(
-            "../../gui/lisgd/lisgd",
-            &format!("{}usr/bin/lisgd", RD),
+            "../../gui/orbit/target/aarch64-unknown-linux-gnu/release/orbit",
+            &format!("{}usr/bin/orbit", RD),
         )
         .unwrap();
 
@@ -759,7 +767,7 @@ impl SetupThing for Rootfs {
                 &format!("useradd -M -G input {}", _options.config.rootfs_user),
                 _options.config.command_output,
             );
-            
+
             /*
             Rootfs::execute(
                 RD,

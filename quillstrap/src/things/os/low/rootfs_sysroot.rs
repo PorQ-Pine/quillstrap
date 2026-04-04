@@ -44,6 +44,9 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "qt6-qtbase-devel",
     "qt5-qtsvg-devel",
     "qt6-qtsvg-devel",
+    // Orbit
+    "gtk4-devel",
+    "gtk4-layer-shell-devel",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]

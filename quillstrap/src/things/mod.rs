@@ -46,6 +46,7 @@ pub enum TraitWrapper {
     TwCoreSettings(CoreSettings),
     TwCosmicWanderer(CosmicWanderer),
     TwLisgd(Lisgd),
+    TwOrbit(Orbit),
 }
 
 // This is weird but I won't kill you with lifetimes at least
@@ -90,6 +91,7 @@ macro_rules! forward {
             TraitWrapper::TwCoreSettings(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwCosmicWanderer(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwLisgd(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwOrbit(inner) => inner.$method($($($arg),*)?),
         }
     };
 }
@@ -176,6 +178,7 @@ pub fn get_things() -> Vec<TraitWrapper> {
         TwCoreSettings(Default::default()),
         TwCosmicWanderer(Default::default()),
         TwLisgd(Default::default()),
+        TwOrbit(Default::default()),
     ]
 }
 
