@@ -158,6 +158,8 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     // Xournalpp hacky fix
     "xdpyinfo",
     "openbox",
+    // Write
+    "google-roboto-fonts",
     // Eww tools
     "pamixer",
     "dunst",
@@ -703,6 +705,9 @@ impl SetupThing for Rootfs {
 
         // Xournalpp
         copy_dir_content("../../gui/xournalpp/build/install/", &format!("{}usr/", RD));
+
+        // Write
+        copy_file("../../gui/write_app/syncscribble/Release/Write", &format!("{}usr/bin/Write", RD)).unwrap();
 
         // Cosmic wanderer
         copy_file(

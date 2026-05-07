@@ -59,11 +59,15 @@ impl SetupThing for WriteApp {
             _options.config.command_output,
         );
 
-        mkdir_p("build");
-
         Rootfs::execute(
             &sysroot_path,
             &format!(r#"env USE_SYSTEM_SDL=1 make -C /quillstrap/build_all/os/gui/write_app/syncscribble -j{}"#, get_cores()),
+            _options.config.command_output,
+        );
+
+        Rootfs::execute(
+            &sysroot_path,
+            &format!("strip /quillstrap/build_all/os/gui/write_app/syncscribble/Release/Write"),
             _options.config.command_output,
         );
 
