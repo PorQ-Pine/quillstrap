@@ -87,6 +87,7 @@ macro_rules! forward {
             TraitWrapper::TwPinenoteService(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwSqueekboard(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwXournalpp(inner) => inner.$method($($($arg),*)?),
+            TraitWrapper::TwWriteApp(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwXwaylandSatellite(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwProceduralWallpapers(inner) => inner.$method($($($arg),*)?),
             TraitWrapper::TwCoreSettings(inner) => inner.$method($($($arg),*)?),

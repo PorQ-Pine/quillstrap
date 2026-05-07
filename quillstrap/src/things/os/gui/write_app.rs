@@ -31,7 +31,7 @@ impl SetupThing for WriteApp {
     }
 
     fn is_built(&self) -> bool {
-        path_exists("synscribble/Release/Write")
+        path_exists("syncscribble/Release/Write")
     }
 
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
@@ -55,7 +55,7 @@ impl SetupThing for WriteApp {
         // Install deps
         Rootfs::execute(
             &sysroot_path,
-            "dnf install -y gcc-c++",
+            "dnf install -y gcc-c++ SDL2-devel",
             _options.config.command_output,
         );
 
@@ -63,7 +63,7 @@ impl SetupThing for WriteApp {
 
         Rootfs::execute(
             &sysroot_path,
-            &format!("env USE_SYSTEM_SDL=1 make -j{}", get_cores()),
+            &format!(r#"env USE_SYSTEM_SDL=1 make -C /quillstrap/build_all/os/gui/write_app/syncscribble -j{}"#, get_cores()),
             _options.config.command_output,
         );
 
@@ -77,16 +77,7 @@ impl SetupThing for WriteApp {
     }
 
     fn deploy(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
-        let port = _options.config.rootfs_options.deploy_ssh_port;
-        ssh_execute("killall -9 squeekboard", port, _options);
-        ssh_execute("rm -rf /usr/bin/squeekboard", port, _options);
-        ssh_send(
-            "builddir/src/squeekboard",
-            "/usr/bin/squeekboard",
-            port,
-            _options,
-        );
-        Ok(())
+        todo!();
     }
 
     fn run(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
