@@ -26,9 +26,9 @@ pub fn pull(thing: &impl SetupThing, options: &Options) {
 
 pub fn clone(thing: &impl SetupThing, options: &Options) {
     let url = assemble_git_link(thing.git(), options);
-    info!("Clonning repo: {}", url);
+    info!("Cloning repo: {}", url);
     run_command(
-        &format!("git clone {} {}", url, thing.name()),
+        &format!("git clone --recurse-submodules {} {}", url, thing.name()),
         options.config.command_output,
     )
     .expect(&format!("Failed to clone repo: {}", url));
