@@ -707,7 +707,16 @@ impl SetupThing for Rootfs {
         copy_dir_content("../../gui/xournalpp/build/install/", &format!("{}usr/", RD));
 
         // Write
-        copy_file("../../gui/write_app/syncscribble/Release/Write", &format!("{}usr/bin/Write", RD)).unwrap();
+        copy_file(
+            "../../gui/write_app/syncscribble/Release/Write",
+            &format!("{}usr/bin/Write", RD),
+        )
+        .unwrap();
+        copy_file(
+            "../../gui/write_app/write.desktop",
+            &format!("{}usr/share/applications/write.desktop", RD),
+        )
+        .unwrap();
 
         // Cosmic wanderer
         copy_file(
