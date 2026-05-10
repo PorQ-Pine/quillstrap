@@ -263,6 +263,7 @@ impl SetupThing for Rootfs {
             "qoms",
             "squeekboard",
             "xournalpp",
+            "write_app",
             "xwayland_satellite",
             "cosmic_wanderer",
             "lisgd",

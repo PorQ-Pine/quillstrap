@@ -26,7 +26,7 @@ impl SetupThing for WriteApp {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
-        remove_dir_all("build").ok();
+        remove_dir_all("syncscribble/Release").ok();
         Ok(())
     }
 
