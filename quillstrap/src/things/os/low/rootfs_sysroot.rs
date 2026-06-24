@@ -47,6 +47,8 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     // Orbit
     "gtk4-devel",
     "gtk4-layer-shell-devel",
+    // Squeekboard
+    "feedbackd-devel",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]

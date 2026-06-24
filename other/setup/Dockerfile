@@ -65,12 +65,11 @@ RUN apt-get install -y python3-numpy
 RUN apt-get install -y squashfs-tools
 
 # Zig (for cargo zigbuild)
-ARG ZIG_VERSION=0.15.1
 RUN set -e; \
     arch="$(dpkg --print-architecture)"; \
     case "$arch" in \
-        amd64) url="https://github.com/PorQ-Pine/zig-package/releases/download/${ZIG_VERSION}/zig-x86_64-linux-${ZIG_VERSION}.tar.xz" ;; \
-        arm64) url="https://github.com/PorQ-Pine/zig-package/releases/download/${ZIG_VERSION}/zig-aarch64-linux-${ZIG_VERSION}.tar.xz" ;; \
+        amd64) url="https://ziglang.org/builds/zig-x86_64-linux-0.17.0-dev.956+2dca73595.tar.xz" ;; \
+        arm64) url="https://ziglang.org/builds/zig-aarch64-linux-0.17.0-dev.956+2dca73595.tar.xz" ;; \
         *) echo "Unsupported architecture: $arch" && exit 1 ;; \
     esac; \
     curl -fSL -o /tmp/zig.tar.xz "$url"; \

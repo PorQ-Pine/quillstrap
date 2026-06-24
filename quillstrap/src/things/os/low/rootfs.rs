@@ -63,6 +63,8 @@ pub const ROOTFS_PACKAGES_EVERYWHERE: &[&str] = &[
     // Orbit
     "gtk4",
     "gtk4-layer-shell",
+    // Squeekboard
+    "libfeedbackd",
 ];
 
 const ROOTFS_BLACKLIST: &[&str] = &[
@@ -138,8 +140,6 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "gstreamer1-libav",
     // Remote display, best solution that I have found
     "tigervnc", // for vncviewer command
-    // Virtual keyboard
-    "squeekboard",
     // Fix for Qt stuff
     "qt6-qtwayland",
     "qt5-qtwayland",
@@ -483,6 +483,7 @@ impl SetupThing for Rootfs {
         // Upower hacky fix, make a proper fix in the future!
         // Installed above
         // Rootfs::execute(RD, &format!("dnf --assumeyes install upower"), true);
+
         let upower_service_file = &format!("{}usr/lib/systemd/system/upower.service", RD);
         let file = read_file_str(upower_service_file.to_string()).unwrap();
         if !file.contains("# PrivateUsers=yes") {
@@ -700,12 +701,17 @@ impl SetupThing for Rootfs {
         );
 
         // Squeekboard
-        copy_file(
-            "../../gui/squeekboard/builddir/src/squeekboard",
-            &format!("{}usr/bin/squeekboard", RD),
-        )
-        .unwrap();
-
+        copy_dir_content(
+            "../../gui/squeekboard/install_dir",
+            RD
+        );
+        // Why
+        Rootfs::execute(
+            RD,
+            "glib-compile-schemas /usr/local/share/glib-2.0/schemas",
+            _options.config.command_output,
+        );
+        
         // Xournalpp
         copy_dir_content("../../gui/xournalpp/build/install/", &format!("{}usr/", RD));
 
@@ -934,11 +940,11 @@ cp -r /etc/skel/.* /home/szybet/
 sudo chown -R szybet:szybet /home/szybet # Important permissions
 umount /home/szybet
 
-To log in from cli: (Remember to kill quillinit via htop, sort via PID)
+To log in from cli: (Remember to kill quillinit via htop, sort via PID and to decrypt home dir)
 also stop qoms:
 systemctl stop qoms
 export GREETD_SOCK="/run/greetd-$(ls /run/ | grep -E '^greetd-[0-9]+\.sock$' | sort -n | tail -n 1 | cut -d'-' -f2)"
-tuigreetd
+tuigreet
 
 Wayland/niri/GUI socket:
 export NIRI_SOCKET=/run/user/1000/niri.wayland-X.sock

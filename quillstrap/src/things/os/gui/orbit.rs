@@ -30,6 +30,7 @@ impl SetupThing for Orbit {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        run_command("cargo clean", true).ok();
         Ok(())
     }
 

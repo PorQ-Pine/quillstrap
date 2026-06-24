@@ -1,3 +1,5 @@
+use std::fs::create_dir_all;
+
 use crate::prelude::*;
 
 #[derive(Clone, Copy, Default, Debug)]
@@ -26,6 +28,7 @@ impl SetupThing for Squeekboard {
     }
 
     fn clean(&self, _options: &Options) -> color_eyre::eyre::Result<(), String> {
+        remove_dir_all("builddir").ok();
         Ok(())
     }
 
@@ -94,6 +97,13 @@ impl SetupThing for Squeekboard {
             _options.config.command_output,
         );
 
+        create_dir_all("install_dir").ok();
+        Rootfs::execute(
+            &sysroot_path,
+            "meson install -C /quillstrap/build_all/os/gui/squeekboard/builddir --destdir /quillstrap/build_all/os/gui/squeekboard/install_dir",
+            _options.config.command_output,
+        );
+
         run_command(
             &format!("umount {}", quillstrap_mount),
             _options.config.command_output,
@@ -114,7 +124,12 @@ impl SetupThing for Squeekboard {
         let port = _options.config.rootfs_options.deploy_ssh_port;
         ssh_execute("killall -9 squeekboard", port, _options);
         ssh_execute("rm -rf /usr/bin/squeekboard", port, _options);
-        ssh_send("builddir/src/squeekboard", "/usr/bin/squeekboard", port, _options);
+        ssh_send(
+            "builddir/src/squeekboard",
+            "/usr/bin/squeekboard",
+            port,
+            _options,
+        );
         Ok(())
     }
 
