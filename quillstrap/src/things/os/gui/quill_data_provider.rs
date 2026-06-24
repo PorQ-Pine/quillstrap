@@ -67,19 +67,19 @@ impl SetupThing for QuillDataProvider {
 
         dir_change("quill-data-provider");
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{}", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();
         dir_change("../eww-data-requester");
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{}", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();
         dir_change("../eink-window-settings");
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{}", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();

@@ -100,13 +100,13 @@ impl SetupThing for CosmicWanderer {
         set_var("CXXFLAGS", &include_flag);
 
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41 --no-default-features --features quill_defaults",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{} --no-default-features --features quill_defaults", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();
         dir_change("cosmic-wanderer-opener");
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{}", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();

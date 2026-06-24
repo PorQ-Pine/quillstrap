@@ -60,7 +60,7 @@ impl SetupThing for PinenoteService {
         );
 
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{}", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();

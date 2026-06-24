@@ -60,7 +60,7 @@ impl SetupThing for EwwNiriToolbar {
         );
 
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu.2.41 --no-default-features",
+            &format!("cargo zigbuild --release --target aarch64-unknown-linux-gnu.{} --no-default-features", ROOTFS_GLIBC_TARGET),
             _options.config.command_output,
         )
         .unwrap();
