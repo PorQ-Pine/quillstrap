@@ -52,7 +52,8 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
 #[derive(Clone, Copy, Default, Debug)]
 pub struct RootfsSysroot;
 
-// https://github.com/PorQ-Pine/rkbin
+const RD: &str = "sysroot/";
+
 impl SetupThing for RootfsSysroot {
     fn name(&self) -> &'static str {
         "rootfs_sysroot"
@@ -100,18 +101,14 @@ impl SetupThing for RootfsSysroot {
     }
 
     fn clean(&self, _options: &Options) -> std::result::Result<(), String> {
-        remove_dir_all("sysroot/").ok();
-        mkdir_p("sysroot");
-        run_command(
-            &format!("tar -xJf ../rootfs/rootfs.tar.xz -C sysroot"),
-            _options.config.command_output,
-        )
-        .unwrap();
+        umount_recursive(RD);
+        if let Err(e) = remove_dir_all("sysroot/") {
+            error!("Failed to remove sysroot/: {e}");
+        }
         Ok(())
     }
 
     fn build(&self, _options: &Options) -> std::result::Result<(), String> {
-        const RD: &str = "sysroot/";
         Rootfs::turn_on_chroot(RD);
 
         // Packages
@@ -124,6 +121,7 @@ impl SetupThing for RootfsSysroot {
             true,
         );
 
+        umount_recursive(RD);
         Ok(())
     }
 

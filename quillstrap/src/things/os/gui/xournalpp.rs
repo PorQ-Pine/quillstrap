@@ -83,6 +83,13 @@ impl SetupThing for Xournalpp {
 
         mkdir_p("build");
 
+        // AAA
+        Rootfs::execute(
+            &sysroot_path,
+            "git config --global --add safe.directory \"*\"",
+            _options.config.command_output,
+        );
+
         Rootfs::execute(
             &sysroot_path,
             "cmake /quillstrap/build_all/os/gui/xournalpp \
@@ -144,7 +151,11 @@ impl SetupThing for Xournalpp {
         // Hacky fix
         let path = Path::new("build/install/bin/xournalpp_hacky_fix.sh");
         std::fs::write(path, SCRIPT).unwrap();
-        run_command(&format!("chmod +x {}", path.to_string_lossy()), _options.config.command_output).unwrap();
+        run_command(
+            &format!("chmod +x {}", path.to_string_lossy()),
+            _options.config.command_output,
+        )
+        .unwrap();
 
         Ok(())
     }

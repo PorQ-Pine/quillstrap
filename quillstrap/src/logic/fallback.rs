@@ -18,4 +18,6 @@ pub fn manage_fallback(options: &Options) {
         target_check("aarch64-unknown-linux-musl");
         target_check("aarch64-unknown-linux-gnu");
     }
+    // Just shut up git
+    run_command("git config --global --add safe.directory \"*\"", false).ok();
 }
