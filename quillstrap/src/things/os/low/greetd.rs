@@ -41,19 +41,28 @@ impl SetupThing for Greetd {
 
         let full_path = format!("{}greetd/", get_path_of_thing_native(self, _options));
         info!("Full path is: {}", full_path);
-        
+
         set_var("PKG_CONFIG_ALLOW_CROSS", "1");
-        set_var("PKG_CONFIG_SYSROOT_DIR", &format!("{}../../rootfs_sysroot/sysroot", full_path));
+        set_var(
+            "PKG_CONFIG_SYSROOT_DIR",
+            &format!("{}../../rootfs_sysroot/sysroot", full_path),
+        );
         /*
         set_var(
             "PKG_CONFIG_PATH",
             "../../rootfs_sysroot/sysroot/usr/lib/aarch64-linux-gnu/pkgconfig",
         );
         */
-        set_var("RUSTFLAGS", &format!("-L {}../../rootfs_sysroot/sysroot/usr/lib64", full_path));
+        set_var(
+            "RUSTFLAGS",
+            &format!("-L {}../../rootfs_sysroot/sysroot/usr/lib64", full_path),
+        );
 
         run_command(
-            "cargo zigbuild --release --target aarch64-unknown-linux-gnu",
+            &format!(
+                "cargo zigbuild --release --target aarch64-unknown-linux-gnu.{}",
+                ROOTFS_GLIBC_TARGET
+            ),
             _options.config.command_output,
         )
         .unwrap();
