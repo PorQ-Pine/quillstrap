@@ -62,6 +62,8 @@ impl SetupThing for Kernel {
             _options.config.command_output,
         )
         .unwrap();
+
+        remove_dir_all("out").ok();
         Ok(())
     }
 
