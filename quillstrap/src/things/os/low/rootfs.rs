@@ -412,8 +412,6 @@ impl SetupThing for Rootfs {
 
         Rootfs::execute(RD, "systemctl unmask serial-getty@.service", true);
         Rootfs::execute(RD, "systemctl enable serial-getty@.service", false);
-        Rootfs::execute(RD, "systemctl unmask serial-getty@ttyS0.service", true);
-        Rootfs::execute(RD, "systemctl enable serial-getty@ttyS0.service", true);
 
         // Packages
         Rootfs::execute(RD, "dnf --assumeyes update", true);
