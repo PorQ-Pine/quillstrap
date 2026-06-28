@@ -239,6 +239,34 @@ impl Rootfs {
         Rootfs::execute(dir, &format!("systemctl disable {}", service), false);
         Rootfs::execute(dir, &format!("systemctl mask {}", service), false);
     }
+
+    pub fn enable_service(dir: &str, service: &str) {
+        Rootfs::execute(dir, &format!("systemctl unmask {}", service), false);
+        Rootfs::execute(dir, &format!("systemctl enable {}", service), false);
+
+        /*
+        let preset_dir = format!("{}usr/lib/systemd/system-preset", dir);
+
+        if std::fs::create_dir_all(&preset_dir).is_ok() {
+            let service_name = service.split('/').last().unwrap_or(service);
+
+            let service_file = if service_name.ends_with(".service") {
+                service_name.to_string()
+            } else {
+                format!("{}.service", service_name)
+            };
+
+            let preset_path = format!(
+                "{}/99-quillos-{}.preset",
+                preset_dir,
+                service_file.replace('.', "-")
+            );
+            let preset_content = format!("enable {}\n", service_file);
+
+            std::fs::write(preset_path, preset_content).unwrap();
+        }
+        */
+    }
 }
 
 const RD: &str = "rootfs/";
@@ -281,34 +309,27 @@ impl SetupThing for Rootfs {
         mkdir_p(self.name());
         dir_change(self.name());
 
-        if path_exists("rootfs.tar.xz") && path_exists("rootfs") {
-            warn!(
-                "Rootfs file and dir already present. We won't redownload them, use clean if you want to force this"
+        if !path_exists("rootfs.tar.xz") {
+            let mut ver = run_shell_command_get_output(&format!(
+                "curl -s {} | grep href | tail -n 3 | cut -c 10-25 | tail -n 1",
+                BASE_ROOTFS_URL
+            ));
+            ver.pop();
+            info!("Downloading container version: {}", ver);
+            download_file(
+                &format!("{}{}/rootfs.tar.xz", BASE_ROOTFS_URL, ver),
+                "rootfs.tar.xz",
             );
-            dir_change("../");
-            return Ok(());
         }
 
-        remove_file("rootfs.tar.xz", false).ok();
-        remove_dir_all("rootfs").ok();
-
-        let mut ver = run_shell_command_get_output(&format!(
-            "curl -s {} | grep href | tail -n 3 | cut -c 10-25 | tail -n 1",
-            BASE_ROOTFS_URL
-        ));
-        ver.pop();
-        info!("Downloading container version: {}", ver);
-        download_file(
-            &format!("{}{}/rootfs.tar.xz", BASE_ROOTFS_URL, ver),
-            "rootfs.tar.xz",
-        );
-
-        mkdir_p("rootfs");
-        run_command(
-            &format!("tar -xJf rootfs.tar.xz -C rootfs"),
-            _options.config.command_output,
-        )
-        .unwrap();
+        if !path_exists("rootfs") {
+            mkdir_p("rootfs");
+            run_command(
+                &format!("tar -xJf rootfs.tar.xz -C rootfs"),
+                _options.config.command_output,
+            )
+            .unwrap();
+        }
 
         dir_change("../");
         Ok(())
@@ -324,7 +345,16 @@ impl SetupThing for Rootfs {
             warn!("Failed to remove rootfs: {:?}", err);
         }
         remove_dir_all("out/").ok();
-        remove_file("rootfs.tar.xz", _options.config.command_output).ok();
+
+        if Confirm::with_theme(&ColorfulTheme::default())
+            .with_prompt(
+                "Do you want to also remove rootfs.tar.xz? (you will need to get it again)",
+            )
+            .interact()
+            .unwrap()
+        {
+            remove_file("rootfs.tar.xz", _options.config.command_output).ok();
+        }
 
         Ok(())
     }
@@ -361,6 +391,30 @@ impl SetupThing for Rootfs {
             &format!("exclude=\"{}\"", ROOTFS_BLACKLIST.join(",")),
         );
 
+        // Services
+        // I fucking hate this
+        Rootfs::execute(
+            RD,
+            "rm -rf /usr/lib/systemd/system-preset/99-default-disable.preset",
+            true,
+        );
+
+        Rootfs::disable_service(RD, "systemd-networkd-wait-online");
+        Rootfs::disable_service(RD, "systemd-time-wait-sync");
+
+        // TTY being TTY
+        for i in 1..8 {
+            Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
+        }
+        Rootfs::disable_service(RD, "getty@.service");
+        Rootfs::disable_service(RD, "console-getty.service");
+        Rootfs::disable_service(RD, "container-getty@.service");
+
+        Rootfs::execute(RD, "systemctl unmask serial-getty@.service", true);
+        Rootfs::execute(RD, "systemctl enable serial-getty@.service", false);
+        Rootfs::execute(RD, "systemctl unmask serial-getty@ttyS0.service", true);
+        Rootfs::execute(RD, "systemctl enable serial-getty@ttyS0.service", true);
+
         // Packages
         Rootfs::execute(RD, "dnf --assumeyes update", true);
         let mut packages = Vec::from(ESSENTIAL_PACKAGES);
@@ -383,14 +437,6 @@ impl SetupThing for Rootfs {
         mkdir_p(&format!("{}lib/firmware", RD));
         clean_dir(&format!("{}var/log", RD));
         clean_dir(&format!("{}var/cache", RD));
-
-        // Services
-        Rootfs::disable_service(RD, "systemd-networkd-wait-online");
-        Rootfs::disable_service(RD, "systemd-time-wait-sync");
-        Rootfs::disable_service(RD, "serial-getty@");
-        // Rootfs::disable_service(RD, "getty@tty1");
-        // Don't mask
-        Rootfs::execute(RD, &format!("systemctl disable getty@tty1"), false);
 
         // Zsh
         {
@@ -508,33 +554,6 @@ impl SetupThing for Rootfs {
             replace_string_file(useradd_file, "SHELL=/bin/bash", "SHELL=/bin/zsh");
         }
 
-        // Greetd
-        // For tty to not appear with greetd, while running niri - probably not needed anymore
-        /*
-        for i in 1..8 {
-            Rootfs::disable_service(RD, &format!("getty@tty{}.service", i));
-        }
-        */
-        /*
-        // Doesn't work :(
-        let upower_service_file = &format!("{}usr/lib/systemd/system/greetd.service", RD);
-        let file = read_file_str(upower_service_file.to_string()).unwrap();
-        if !file.contains("# After=getty@tty1.service") {
-            replace_string_file(
-                upower_service_file,
-                "After=getty@tty1.service",
-                "# After=getty@tty1.service",
-            );
-        }
-        if !file.contains("# Conflicts=getty@tty1.service") {
-            replace_string_file(
-                upower_service_file,
-                "Conflicts=getty@tty1.service",
-                "# Conflicts=getty@tty1.service",
-            );
-        }
-        */
-
         // Maybe not needed
         Rootfs::execute(
             RD,
@@ -553,15 +572,6 @@ impl SetupThing for Rootfs {
         // TODO: add greetd to excludes now
 
         // Eww
-        // We need git
-        /*
-        Rootfs::execute(
-            RD,
-            "dnf copr enable varlad/eww -y",
-            _options.config.command_output,
-        );
-        Rootfs::execute(RD, "dnf install eww -y", _options.config.command_output);
-        */
         copy_file(
             "../../gui/eww/target/aarch64-unknown-linux-gnu/release/eww",
             &format!("{}usr/bin/eww", RD),
@@ -659,11 +669,8 @@ impl SetupThing for Rootfs {
             &format!("{}etc/systemd/system/qoms.service", RD),
         )
         .unwrap();
-        Rootfs::execute(
-            RD,
-            "systemctl enable qoms.service",
-            _options.config.command_output,
-        );
+        Rootfs::enable_service(RD, "qoms.service");
+        Rootfs::enable_service(RD, "greetd.service");
 
         // Pinenote service
         copy_file(
@@ -701,17 +708,14 @@ impl SetupThing for Rootfs {
         );
 
         // Squeekboard
-        copy_dir_content(
-            "../../gui/squeekboard/install_dir",
-            RD
-        );
+        copy_dir_content("../../gui/squeekboard/install_dir", RD);
         // Why
         Rootfs::execute(
             RD,
             "glib-compile-schemas /usr/local/share/glib-2.0/schemas",
             _options.config.command_output,
         );
-        
+
         // Xournalpp
         copy_dir_content("../../gui/xournalpp/build/install/", &format!("{}usr/", RD));
 
