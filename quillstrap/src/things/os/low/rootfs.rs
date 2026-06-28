@@ -331,7 +331,7 @@ impl SetupThing for Rootfs {
 
     fn build(&self, _options: &crate::Options) -> color_eyre::eyre::Result<(), String> {
         warn!(
-            "This is an additive build, if you builded it before with different features, you should clean it now!"
+            "This is an additive build, if you built it before with different features, you should clean it now!"
         );
 
         Rootfs::turn_on_chroot(RD);

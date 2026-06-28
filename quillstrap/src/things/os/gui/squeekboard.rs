@@ -81,6 +81,7 @@ impl SetupThing for Squeekboard {
                 _options.config.command_output,
             )
             .unwrap();
+            Rootfs::turn_on_chroot(&sysroot_path);
         }
 
         // meson setup --wipe
@@ -104,11 +105,7 @@ impl SetupThing for Squeekboard {
             _options.config.command_output,
         );
 
-        run_command(
-            &format!("umount {}", quillstrap_mount),
-            _options.config.command_output,
-        )
-        .unwrap();
+        umount_recursive(&sysroot_path);
 
         /*
         set_var("PKG_CONFIG_ALLOW_CROSS", "");
