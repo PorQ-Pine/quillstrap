@@ -791,10 +791,10 @@ impl SetupThing for Rootfs {
             );
             Rootfs::execute(
                 RD,
-                &format!("useradd -M -G input {}", _options.config.rootfs_user),
+                &format!("usermod -a -G input {}", _options.config.rootfs_user),
                 _options.config.command_output,
             );
-
+            
             /*
             Rootfs::execute(
                 RD,
