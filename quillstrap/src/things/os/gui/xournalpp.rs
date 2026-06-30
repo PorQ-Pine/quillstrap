@@ -1,24 +1,9 @@
 use crate::prelude::*;
 
-const SCRIPT: &str = r#"#!/usr/bin/env bash
+const SCRIPT: &str = r#"#!/usr/bin/bash
 
-for d in {0..99}; do
-    if ! xdpyinfo -display ":$d" >/dev/null 2>&1; then
-        DISPLAY=":$d"
-        break
-    fi
-done
-
-Xwayland -nocursor -wr "$DISPLAY" &
-XW_PID=$!
-sleep 1
-DISPLAY="$DISPLAY" openbox &
-OB_PID=$!
-sleep 1
-DISPLAY="$DISPLAY" GDK_BACKEND=x11 xournalpp
-
-kill "$OB_PID"
-kill "$XW_PID""#;
+GDK_BACKEND=x11 GDK_DPI_SCALE=0.5 GDK_SCALE=2 xournalpp
+"#;
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct Xournalpp;
@@ -58,6 +43,7 @@ impl SetupThing for Xournalpp {
         let full_path = get_path_of_thing_native(self, _options);
         let sysroot_path = format!("{}../../low/rootfs_sysroot/sysroot", full_path);
         warn!("full_path: {}", full_path);
+        Rootfs::turn_on_chroot(&format!("{}/", sysroot_path));
 
         let quillstrap_mount = &format!("{}/quillstrap", sysroot_path);
         if !path_exists(quillstrap_mount) || !is_mount_point(quillstrap_mount) {
@@ -71,15 +57,6 @@ impl SetupThing for Xournalpp {
             )
             .unwrap();
         }
-
-        // Install deps
-        Rootfs::execute(
-            &sysroot_path,
-            "dnf install -y gcc-c++ cmake gtk3-devel libxml2-devel portaudio-devel libsndfile-devel \
-            poppler-glib-devel texlive-scheme-basic texlive-dvipng gettext libzip-devel \
-            librsvg2-devel lua-devel gtksourceview4-devel help2man qpdf-devel git zlib zlib-devel zlib-ng",
-            _options.config.command_output,
-        );
 
         mkdir_p("build");
 
@@ -156,6 +133,8 @@ impl SetupThing for Xournalpp {
             _options.config.command_output,
         )
         .unwrap();
+
+        umount_recursive(&&format!("{}/", sysroot_path));
 
         Ok(())
     }

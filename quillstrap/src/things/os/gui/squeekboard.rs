@@ -40,6 +40,7 @@ impl SetupThing for Squeekboard {
         let full_path = get_path_of_thing_native(self, _options);
         let sysroot_path = format!("{}../../low/rootfs_sysroot/sysroot", full_path);
         warn!("full_path: {}", full_path);
+        Rootfs::turn_on_chroot(&format!("{}/", sysroot_path));
 
         /*
         set_var("PKG_CONFIG_ALLOW_CROSS", "1");
@@ -81,7 +82,6 @@ impl SetupThing for Squeekboard {
                 _options.config.command_output,
             )
             .unwrap();
-            Rootfs::turn_on_chroot(&sysroot_path);
         }
 
         // meson setup --wipe
@@ -105,7 +105,7 @@ impl SetupThing for Squeekboard {
             _options.config.command_output,
         );
 
-        umount_recursive(&sysroot_path);
+        umount_recursive(&&format!("{}/", sysroot_path));
 
         /*
         set_var("PKG_CONFIG_ALLOW_CROSS", "");

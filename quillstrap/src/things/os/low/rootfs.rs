@@ -223,6 +223,7 @@ impl Rootfs {
         mount_point(&format!("{}tmp", dir), "tmpfs");
         mount_point(&format!("{}run", dir), "tmpfs");
         mount_point(&format!("{}dev", dir), "devtmpfs");
+
         /*
         let dev_pts_path = &format!("{}dev/pts", dir);
         mkdir_p(dev_pts_path);

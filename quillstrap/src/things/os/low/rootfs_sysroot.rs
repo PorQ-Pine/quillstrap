@@ -1,6 +1,5 @@
 use crate::prelude::*;
 
-// ZSH is installed in build code seperately in rootfs
 const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "zsh",
     "libinput-devel",
@@ -37,6 +36,7 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     "libbsd-devel",
     "feedbackd-devel",
     "xcb-util-cursor-devel",
+    "feedbackd-devel",
     // Slint qt
     "qt5-qtwayland-devel",
     "qt6-qtwayland-devel",
@@ -47,8 +47,25 @@ const ESSENTIAL_PACKAGES_SYSROOT: &[&str] = &[
     // Orbit
     "gtk4-devel",
     "gtk4-layer-shell-devel",
-    // Squeekboard
-    "feedbackd-devel",
+    // Xournalpp
+    "gcc-c++",
+    "libxml2-devel",
+    "portaudio-devel",
+    "libsndfile-devel",
+    "poppler-glib-devel",
+    "texlive-scheme-basic",
+    "texlive-dvipng",
+    "gettext",
+    "libzip-devel",
+    "librsvg2-devel",
+    "lua-devel",
+    "gtksourceview4-devel",
+    "help2man",
+    "qpdf-devel",
+    "git",
+    "zlib",
+    "zlib-devel",
+    "zlib-ng",
 ];
 
 #[derive(Clone, Copy, Default, Debug)]
