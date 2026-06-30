@@ -126,7 +126,8 @@ const ROOTFS_GUI_PACKAGES: &[&str] = &[
     "pulseaudio-utils",
     "rhythmbox", // If someone has a better default music app, let me know ;p
     // File manager
-    "krusader",
+    "nautilus",
+    "krusader", // In landscape, for more complicated operations
     // Text editor
     "kate",
     // PDF
