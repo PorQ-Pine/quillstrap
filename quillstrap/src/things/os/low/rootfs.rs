@@ -1,3 +1,4 @@
+use regex::Regex;
 use std::fs::remove_dir_all;
 
 use crate::prelude::*;
@@ -512,11 +513,13 @@ impl SetupThing for Rootfs {
         */
 
         // Other
-        replace_string_file(
-            &format!("{}etc/os-release", RD),
-            "Fedora Linux 42 (Container Image)",
-            "Quill OS",
-        );
+        {
+            let release_file = format!("{}etc/os-release", RD);
+            let re = Regex::new(r"Fedora Linux \d+ \(Container Image\)").unwrap();
+            let file_contents = read_file_str(release_file.to_string()).unwrap();
+            let updated_contents = re.replace_all(&file_contents, "Quill OS").to_string();
+            std::fs::write(&release_file, updated_contents).unwrap();
+        }
 
         // Make it not scream errors at boot
         Rootfs::disable_service(RD, "proc-sys-fs-binfmt_misc.mount");
@@ -794,7 +797,7 @@ impl SetupThing for Rootfs {
                 &format!("usermod -a -G input {}", _options.config.rootfs_user),
                 _options.config.command_output,
             );
-            
+
             /*
             Rootfs::execute(
                 RD,
