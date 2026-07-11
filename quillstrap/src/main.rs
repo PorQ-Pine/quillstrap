@@ -1,3 +1,4 @@
+use std::fs::exists;
 use std::env;
 use crate::prelude::*;
 
@@ -34,6 +35,16 @@ fn main() -> Result<()> {
     mkdir_p("../other/private");
     let config = Config::load();
     config.validate();
+
+    if config.default_shell != env::var("SHELL")? {
+        let mut shell_to_choose = &Config::default().default_shell;
+        if exists(&config.default_shell)? {
+            shell_to_choose = &config.default_shell;
+        } else {
+            warn!("Shell chosen does not exist, defaulting to bash");
+        }
+        run_command(&format!("chsh -s {}", shell_to_choose), true)?;
+    }
 
     let options = Options {
         args,

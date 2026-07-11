@@ -36,6 +36,7 @@ pub struct RootfsOptions {
 
 #[derive(Serialize, Deserialize, PartialEq, Clone)]
 pub struct Config {
+    pub default_shell: String,
     pub git_link_type: GitLinkType,
     pub git_platform: GitPlatform,
     pub git_username: String,
@@ -62,6 +63,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
+            default_shell: "/bin/bash".to_string(),
             git_link_type: Default::default(),
             git_platform: Default::default(),
             git_username: "PorQ-Pine".to_string(),
