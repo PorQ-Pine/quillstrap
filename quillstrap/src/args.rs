@@ -70,7 +70,7 @@ pub struct Args {
 
         #[arg(
         short, long,
-        help = "Ignore checks if something is built, just built it (auto mode)",
+        help = "Ignore checks if something is built, just build it (auto mode)",
         default_value_t = false, help_heading = GENERAL_OPTIONS
     )]
     pub ignore_built_checks: bool,
