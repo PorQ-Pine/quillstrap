@@ -10,3 +10,4 @@ pub mod firmware;
 pub mod eink_kernel_magic;
 pub mod procedural_wallpapers;
 pub mod core_settings;
+pub mod qinit_binaries;

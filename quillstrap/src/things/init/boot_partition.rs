@@ -1,8 +1,6 @@
 use crate::prelude::*;
 
 const QUILL_BOOT_MOUNT_PATH: &str = "/mnt/quill_boot/";
-const QINIT_BINARIES_FILE: &str = "qinit_binaries.squashfs";
-const TMP_PATH: &str = "/tmp/boot_partition_temp/";
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct BootPartition;
@@ -18,13 +16,7 @@ impl SetupThing for BootPartition {
 
     fn deps(&self) -> Vec<&'static str> {
         // It needs them to deploy, but makes sense to keep them here
-        vec![
-            "kernel",
-            "eink_kernel_magic",
-            "firmware",
-            "procedural_wallpapers",
-            "core_settings",
-        ]
+        vec!["kernel", "eink_kernel_magic", "qinit_binaries"]
     }
 
     fn git(&self) -> &'static str {
@@ -52,10 +44,7 @@ impl SetupThing for BootPartition {
         warn!("We assume that because of expose_mmc deploy, the MMC is exposed as a block device");
 
         let _disk = choose_disk();
-
         let partition = get_partition("quill_boot");
-        let qinit_binaries_squashfs_path =
-            format!("{}{}", &QUILL_BOOT_MOUNT_PATH, &QINIT_BINARIES_FILE);
 
         mkdir_p(&QUILL_BOOT_MOUNT_PATH);
 
@@ -66,45 +55,11 @@ impl SetupThing for BootPartition {
         .unwrap();
         run_command("sync", false).unwrap();
 
-        if std::fs::exists(&TMP_PATH).unwrap() {
-            std::fs::remove_dir_all(&TMP_PATH).unwrap();
-        }
-        mkdir_p(&TMP_PATH);
         copy_file(
-            &format!(
-                "../procedural_wallpapers/out/{}",
-                &PROCEDURAL_WALLPAPERS_BINARY
-            ),
-            &format!("{}{}", &TMP_PATH, &PROCEDURAL_WALLPAPERS_BINARY),
+            "../qinit_binaries/out/qinit_binaries.squashfs",
+            &format!("{}qinit_binaries.squashfs", &QUILL_BOOT_MOUNT_PATH),
         )
         .unwrap();
-        copy_file(
-            &format!("../core_settings/out/{}", &CORE_SETTINGS_BINARY),
-            &format!("{}{}", &TMP_PATH, &CORE_SETTINGS_BINARY),
-        )
-        .unwrap();
-
-        let mksquashfs_cmd = if _options.config.compression_enabled {
-            format!(
-                // TODO: mksquashfs options should go into a single variable somewhere, not be duplicated like that (from rootfs.rs) here
-                "mksquashfs {} {} -b 32768 -comp zstd -Xcompression-level 22 -no-xattrs",
-                &TMP_PATH, &qinit_binaries_squashfs_path
-            )
-        } else {
-            format!(
-                "mksquashfs {} {} -no-compression -no-xattrs",
-                &TMP_PATH, &qinit_binaries_squashfs_path
-            )
-        };
-        if std::fs::exists(&qinit_binaries_squashfs_path).unwrap() {
-            std::fs::remove_file(&qinit_binaries_squashfs_path).unwrap();
-        }
-        run_command(&mksquashfs_cmd, true).unwrap();
-        sign(
-            &qinit_binaries_squashfs_path,
-            &format!("{}.dgst", &qinit_binaries_squashfs_path),
-            _options,
-        );
 
         copy_file(
             "../kernel/out/Image.gz",
