@@ -1,6 +1,6 @@
-use std::fs::exists;
-use std::env;
 use crate::prelude::*;
+use std::env;
+use std::fs::exists;
 
 use crate::logic::d2_graph::generate_d2_graph;
 use crate::things::{TraitWrapper, get_things};
@@ -36,14 +36,16 @@ fn main() -> Result<()> {
     let config = Config::load();
     config.validate();
 
-    if config.default_shell != env::var("SHELL")? {
-        let mut shell_to_choose = &Config::default().default_shell;
-        if exists(&config.default_shell)? {
-            shell_to_choose = &config.default_shell;
-        } else {
-            warn!("Shell chosen does not exist, defaulting to bash");
+    if let Ok(current_shell) = env::var("SHELL") {
+        if config.default_shell != current_shell {
+            let mut shell_to_choose = &Config::default().default_shell;
+            if exists(&config.default_shell)? {
+                shell_to_choose = &config.default_shell;
+            } else {
+                warn!("Shell chosen does not exist, defaulting to bash");
+            }
+            run_command(&format!("chsh -s {}", shell_to_choose), true)?;
         }
-        run_command(&format!("chsh -s {}", shell_to_choose), true)?;
     }
 
     let options = Options {
