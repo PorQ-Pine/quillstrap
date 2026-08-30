@@ -1,6 +1,6 @@
 use crate::prelude::*;
 
-const KOREADER_DEB_URL: &str = "https://github.com/koreader/koreader/releases/download/v2025.10/koreader-appimage-aarch64-v2025.10.AppImage";
+const KOREADER_DEB_URL: &str = "https://github.com/koreader/koreader/releases/download/v2026.07.1/koreader-v2026.07.1-aarch64.AppImage";
 
 // Too lazy to set proper icon
 // Yes, full path, I debugged this for far too long.
