@@ -69,8 +69,8 @@ RUN apt-get install -y squashfs-tools
 RUN set -e; \
     arch="$(dpkg --print-architecture)"; \
     case "$arch" in \
-        amd64) url="https://ziglang.org/builds/zig-x86_64-linux-0.17.0-dev.956+2dca73595.tar.xz" ;; \
-        arm64) url="https://ziglang.org/builds/zig-aarch64-linux-0.17.0-dev.956+2dca73595.tar.xz" ;; \
+        amd64) url="https://github.com/PorQ-Pine/zig-package/releases/download/0.17.0/zig-x86_64-linux-0.17.0.tar.xz" ;; \
+        arm64) url="https://github.com/PorQ-Pine/zig-package/releases/download/0.17.0/zig-aarch64-linux-0.17.0.tar.xz" ;; \
         *) echo "Unsupported architecture: $arch" && exit 1 ;; \
     esac; \
     curl -fSL -o /tmp/zig.tar.xz "$url"; \
